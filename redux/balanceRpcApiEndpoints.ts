@@ -18,7 +18,7 @@ export const balanceRpcApiEndpoints = {
 	endpoints: (builder: RpcEndpointBuilder) => ({
 		realtimeBalance: builder.query<RealtimeBalance, BalanceQueryParams>({
 			queryFn: async ({ accountAddress, tokenAddress, chainId }) => {
-				const framework = await getSFFramework();
+				const framework = await getSFFramework(chainId);
 
 				const [realtimeBalanceOfNowResult, getNetFlowResult] = await Promise.all([
 					SuperToken__factory.connect(tokenAddress, framework.settings.provider).realtimeBalanceOfNow(accountAddress),

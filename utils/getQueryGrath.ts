@@ -1,41 +1,38 @@
 export const getQueryGrath = (queryAddress: string) => `{
   account(id: "${queryAddress.toLowerCase()}") {
-    flowsOwned(first: 1000) {
-      lastUpdate
-      flowRate
-      sum
-      recipient {
+    inflows(first: 1000) {
+      currentFlowRate
+      receiver {
+        id
+      }
+      sender {
         id
       }
       token {
         id
         symbol
       }
-      events {
+      flowUpdatedEvents {
         flowRate
-        sum
-        transaction {
-          timestamp
-        }
+        timestamp
+        totalReceiverFlowRate
       }
+      updatedAtTimestamp
     }
-    flowsReceived(first: 1000, where: {flowRate_gt: 0}) {
-      lastUpdate
-      flowRate
-      sum
-      owner {
+    outflows(first: 1000, where: {currentFlowRate_gt: "0"}) {
+      currentFlowRate
+      updatedAtTimestamp
+      sender {
         id
       }
       token {
         id
         symbol
       }
-      events {
+      flowUpdatedEvents {
         flowRate
-        sum
-        transaction {
-          timestamp
-        }
+        timestamp
+        totalSenderFlowRate
       }
     }
   }

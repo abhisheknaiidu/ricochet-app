@@ -1,23 +1,21 @@
 import { RectangleGroupIcon } from '@heroicons/react/24/solid';
 import AlertAction from '@richochet/utils/alertAction';
-import { getShareScaler } from '@richochet/utils/getShareScaler';
 import Big from 'big.js';
-import { Coin } from 'constants/coins';
-import { FlowEnum, FlowTypes, InvestmentFlow } from 'constants/flowConfig';
-import { RICAddress, usdcxRicExchangeAddress, USDCAddress, USDCxAddress } from 'constants/polygon_config';
-import { launchpads } from 'constants/flowConfig';
+import { FlowTypes, InvestmentFlow } from 'constants/flowConfig';
+import { RICAddress, USDCAddress } from 'constants/polygon_config';
+import { launchpads, mumbaiLaunchpads, optimismLaunchpads } from 'constants/flowConfig';
 import { AlertContext } from 'contexts/AlertContext';
-import { ExchangeKeys } from 'enumerations/exchangeKeys.enum';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 import streamApi from 'redux/slices/streams.slice';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { SolidButton } from './button';
 
 export const LaunchPad = () => {
 	const { t } = useTranslation('home');
 	const [state, dispatch] = useContext(AlertContext);
-	const { address, isConnected } = useAccount();
+	const { isConnected } = useAccount();
+	const { chain } = useNetwork()
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [config, setConfig] = useState<InvestmentFlow>(launchpads[0]);
 	const [shareScaler, setShareScaler] = useState<number>(1e3);
@@ -26,6 +24,16 @@ export const LaunchPad = () => {
 		const url = `https://app.uniswap.org/#/swap?theme=dark&inputCurrency=${USDCAddress}&outputCurrency=${RICAddress}&exactAmount=100000&exactField=output`;
 		window.open(url, '_blank');
 	};
+
+	useEffect(() => {
+		if (!chain) return;
+		if (chain.id === 80001) {
+			setConfig(mumbaiLaunchpads[0]);
+		}
+		if (chain.id === 10) {
+			setConfig(optimismLaunchpads[0])
+		}
+	}, [chain])
 
 	const handleStartPosition = () => {
 		if (!config || !shareScaler) {

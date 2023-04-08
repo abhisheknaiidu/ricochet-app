@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount, useBalance, useNetwork } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 
 interface Props {
@@ -9,9 +9,10 @@ interface Props {
 
 export const BalanceDisplay: NextPage<Props> = ({ tokenAddress, showSymbol }): JSX.Element => {
 	const { address } = useAccount();
+	const { chain } = useNetwork()
 	const { data: balance } = useBalance({
 		address: address,
-		chainId: polygon.id,
+		chainId: chain?.id || polygon.id,
 		token: tokenAddress as `0x${string}`,
 	});
 	if (!balance) {

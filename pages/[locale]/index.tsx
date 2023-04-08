@@ -22,9 +22,8 @@ import Big, { BigSource } from 'big.js';
 import { ConnectKitButton } from 'connectkit';
 import { streamExchangeABI } from 'constants/ABIs/streamExchange';
 import { geckoMapping } from 'constants/coingeckoMapping';
-import { flowConfig, FlowEnum, FlowTypes, InvestmentFlow } from 'constants/flowConfig';
+import { combinedFlowConfig,	FlowEnum, FlowTypes, InvestmentFlow, getFlowDirectory } from 'constants/flowConfig';
 import {
-	RICAddress,
 	twoWayMarketDAIWETHAddress,
 	twoWayMarketibAlluoUSDBTCAddress,
 	twoWayMarketibAlluoUSDETHAddress,
@@ -33,7 +32,8 @@ import {
 	twoWayWETHMarketAddress,
 	usdcxibAlluoUSDAddress
 } from 'constants/polygon_config';
-import { upgradeTokensList } from 'constants/upgradeConfig';
+import { getChainRIC } from 'constants/polygon_config';
+import { mumbaiUpgradeTokensList, optimismUpgradeTokensList, upgradeTokensList } from 'constants/upgradeConfig';
 import { getStaticPaths, makeStaticProps } from 'lib/getStatic';
 import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
@@ -41,10 +41,11 @@ import { useEffect, useState } from 'react';
 import coingeckoApi from 'redux/slices/coingecko.slice';
 import superfluidSubgraphApi from 'redux/slices/superfluidSubgraph.slice';
 import { Flow } from 'types/flow';
-import { useAccount, useProvider } from 'wagmi';
+import { useAccount, useProvider, useNetwork } from 'wagmi';
+import { getSubgraphUrl } from '@richochet/utils/getSubgraphUrl';
 import { polygon } from 'wagmi/chains';
 
-const exchangeContractsAddresses = flowConfig.map((f) => f.superToken);
+const exchangeContractsAddresses = combinedFlowConfig.map((f) => f.superToken);
 
 export default function Home(): JSX.Element {
 	const isMounted = useIsMounted();
@@ -53,7 +54,9 @@ export default function Home(): JSX.Element {
 	const [usdPrice, setUsdPrice] = useState<Big>(new Big(0));
 	const [usdFlowRate, setUsdFlowRate] = useState<string>('0');
 	const [usdFlowRateLoading, setUsdFlowRateLoading] = useState<boolean>(false);
-	const provider = useProvider({ chainId: polygon.id });
+	const { chain } = useNetwork();
+	const provider = useProvider({ chainId: chain?.id || polygon.id });
+	const [configs, setConfigs] = useState<InvestmentFlow[]>();
 	const {
 		data: tokenPrice,
 		isLoading: tokenPriceIsLoading,
@@ -88,7 +91,7 @@ export default function Home(): JSX.Element {
 	const [positions, setPositions] = useState<InvestmentFlow[]>([]);
 	const [positionTotal, setPositionTotal] = useState<number>(0);
 	const [emissionRateMap, setEmissionRateMap] = useState<Map<string, string>>(new Map());
-	const [aggregatedRewards, setAggregatedRewards] = useState<number[]>([]);
+	const [aggregatedRewards, setAggregatedRewards] = useState<number[]>([0]);
 	const [aggregatedRICRewards, setAggregatedRICRewards] = useState<number>(0);
 	const [ricRewardLoading, setRicRewardLoading] = useState<boolean>(false);
 	const [positionTotalLoading, setPositionTotalLoading] = useState<boolean>(false);
@@ -97,16 +100,35 @@ export default function Home(): JSX.Element {
 	const [queryFlows] = superfluidSubgraphApi.useQueryFlowsMutation();
 	const [queryStreams] = superfluidSubgraphApi.useQueryStreamsMutation();
 	const [queryReceived] = superfluidSubgraphApi.useQueryReceivedMutation();
+	const [upgradeList, setUpgradeList] = useState<any>();
+
+	useEffect(() => {
+		if (!chain) return;
+		if (chain?.id === 80001) {
+			setUpgradeList(mumbaiUpgradeTokensList);
+		}
+		if (chain?.id === 137) {
+			setUpgradeList(upgradeTokensList);
+		}
+		if (chain?.id === 10) {
+			setUpgradeList(optimismUpgradeTokensList);
+		}
+		setConfigs(getFlowDirectory(chain?.id))
+	}, [chain?.id])
+
 	useEffect(() => {
 		if (isConnected) getSuperTokenBalances(address!).then((res) => setBalanceList(res));
-	}, [address, isConnected]);
+	}, [address, isConnected, chain?.id]);
 
 	useEffect(() => {
 		const results = exchangeContractsAddresses.map(
-			async (addr) => await queryFlows(addr).then((res: any) => res?.data?.data?.account)
+			async (addr) => await queryFlows({queryAddress: addr, network: getSubgraphUrl(chain?.id! || 137)})
+				.then((res: any) => {
+					return res?.data?.data?.account
+				})
 		);
 		Promise.all(results).then((res) => setResults(res));
-	}, [isMounted, address, isConnected]);
+	}, [isMounted, address, isConnected, chain?.id]);
 
 	const getStreams = (streams: any[], streamedSoFarMap: Record<string, number>) => {
 		(streams || []).forEach((stream: any) => {
@@ -135,13 +157,14 @@ export default function Home(): JSX.Element {
 	};
 
 	const getFlows = (streamedSoFarMap: Record<string, number>, receivedSoFarMap: Record<string, number>) => {
-		const flows: Map<string, { flowsOwned: Flow[]; flowsReceived: Flow[] }> = new Map();
+		const flows: Map<string, { inflows: Flow[]; outflows: Flow[] }> = new Map();
 		exchangeContractsAddresses.forEach((el, i) => {
 			if (results.length > 0) {
 				if (results[i] !== null) {
+					//@ts-ignore
 					flows.set(el, results[i]);
 				} else {
-					flows.set(el, { flowsOwned: [], flowsReceived: [] });
+					flows.set(el, { inflows: [], outflows: [] });
 				}
 			}
 		});
@@ -170,8 +193,14 @@ export default function Home(): JSX.Element {
 		const streamedSoFarMap: Record<string, number> = {};
 		const receivedSoFarMap: Record<string, number> = {};
 		if (address) {
-			await queryStreams(address).then((res: any) => getStreams(res?.data?.data?.streams, streamedSoFarMap));
-			await queryReceived(address).then((res: any) => getReceived(res?.data?.data?.streams, receivedSoFarMap));
+			await queryStreams({address, network: getSubgraphUrl(chain?.id!)})
+				.then((res: any) => {
+					getStreams(res?.data?.data?.streams, streamedSoFarMap)
+				});
+			await queryReceived({receiver: address, network: getSubgraphUrl(chain?.id!)})
+				.then((res: any) => {
+					getReceived(res?.data?.data?.streams, receivedSoFarMap)
+				});
 		}
 		getFlows(streamedSoFarMap, receivedSoFarMap);
 	};
@@ -195,20 +224,20 @@ export default function Home(): JSX.Element {
 
 	useEffect(() => {
 		if (results.length > 0) sweepQueryFlows();
-	}, [results, address, isConnected]);
+	}, [results, address, isConnected, chain?.id]);
 
 	useEffect(() => {
-		if (isConnected && address && isMounted) {
-			const positions = flowConfig.filter(({ flowKey }) => parseFloat(queries.get(flowKey)?.placeholder!) > 0);
+		if (isConnected && address && isMounted && configs) {
+			const positions = configs.filter(({ flowKey }) => parseFloat(queries.get(flowKey)?.placeholder!) > 0);
 			setPositions(positions);
 		}
-	}, [queries, address, isConnected, isMounted]);
+	}, [queries, address, isConnected, isMounted, configs, chain?.id]);
 
 	useEffect(() => {
 		if (isConnected && tokensIsError) console.error(tokensError);
-		if (isConnected && tokensIsSuccess) {
+		if (isConnected && tokensIsSuccess && upgradeList) {
 			setPositionTotalLoading(true);
-			const totalInPositions = upgradeTokensList.reduce((total, token) => {
+			const totalInPositions = upgradeList.reduce((total: any, token: any) => {
 				const balancess =
 					Object.keys(balanceList).length &&
 					tokens &&
@@ -217,17 +246,17 @@ export default function Home(): JSX.Element {
 						parseFloat(balanceList[token.superTokenAddress]) *
 						parseFloat((tokens as any)[(geckoMapping as any)[token.coin]].usd)
 					).toFixed(6);
-
-				return total + parseFloat(balancess as any);
+					if (isNaN(+balancess))  return total + 0;
+				return total + parseFloat(balancess);
 			}, 0);
 			setPositionTotal(totalInPositions);
 			setPositionTotalLoading(false);
 		}
-	}, [isConnected, address, balanceList, tokens, tokensIsSuccess]);
+	}, [isConnected, address, balanceList, tokens, tokensIsSuccess, chain?.id, upgradeList]);
 
 	useEffect(() => {
-		if (coingeckoPrices.size > 0 && queries.size > 0) {
-			let list = flowConfig.filter((each) => each.type === FlowTypes.market);
+		if (coingeckoPrices.size > 0 && queries.size > 0 && configs) {
+			let list = configs.filter((each) => each.type === FlowTypes.market);
 			let sortList = list.sort((a, b) => {
 				const totalVolumeA = parseFloat(getFlowUSDValue(a, queries, coingeckoPrices));
 				const totalVolumeB = parseFloat(getFlowUSDValue(b, queries, coingeckoPrices));
@@ -235,7 +264,7 @@ export default function Home(): JSX.Element {
 			});
 			setSortedList(sortList);
 		}
-	}, [queries, coingeckoPrices]);
+	}, [queries, coingeckoPrices, chain?.id, configs]);
 
 	useEffect(() => {
 		if (sortedList.length) {
@@ -248,8 +277,8 @@ export default function Home(): JSX.Element {
 							await readContract({
 								address: market.superToken as `0x${string}`,
 								abi: streamExchangeABI,
-								functionName: 'getOutputPool',
-								args: [3],
+								functionName: chain?.id === 137 ? 'getOutputPool' : 'outputPools',
+								args: chain?.id === 137 ? [3] : [1],
 							})
 								.then((res: any) => {
 									const finRate = ((Number(res.emissionRate) / 1e18) * 2592000).toFixed(4);
@@ -262,7 +291,7 @@ export default function Home(): JSX.Element {
 					})
 				).then((res) => setEmissionRateMap(rateMap)))();
 		}
-	}, [sortedList]);
+	}, [sortedList, chain?.id]);
 
 	useEffect(() => {
 		if (sortedList.length && queries.size > 0 && emissionRateMap.size > 0) {
@@ -275,7 +304,7 @@ export default function Home(): JSX.Element {
 				}
 			});
 		}
-	}, [emissionRateMap, queries, sortedList]);
+	}, [emissionRateMap, queries, sortedList, chain?.id]);
 
 	useEffect(() => {
 		if (aggregatedRewards.length) {
@@ -285,7 +314,7 @@ export default function Home(): JSX.Element {
 			setAggregatedRICRewards(aggregated);
 			setRicRewardLoading(false);
 		}
-	}, [aggregatedRewards]);
+	}, [aggregatedRewards, chain?.id]);
 
 	useEffect(() => {
 		if (isConnected && tokenPrice && tokenPriceIsSuccess) {
@@ -294,23 +323,26 @@ export default function Home(): JSX.Element {
 		if (tokenPriceIsError) {
 			console.error(tokenPriceError);
 		}
-	}, [isConnected, address, tokenPrice, tokenPriceIsSuccess]);
+	}, [isConnected, address, tokenPrice, tokenPriceIsSuccess, chain?.id]);
 
 	const getNetFlowRate = async () => {
 		setUsdFlowRateLoading(true);
-		await getSFFramework()
+		await getSFFramework(chain?.id || 137)
 			.then(async (framework) => {
 				if (positions.length > 0) {
 					const flowRates = positions.map(
-						async (position) =>
+						async (position) => {
 							await framework.cfaV1.getNetFlow({
 								superToken: position.tokenA,
 								account: address!,
 								providerOrSigner: provider,
 							})
+						}							
 					);
 					Promise.all(flowRates).then((rates) => {
+						//@ts-ignore
 						const totalRate = rates.reduce((acc, curr) => acc + parseFloat(curr), 0).toFixed(0);
+						if (isNaN(+totalRate)) return;
 						const flowRateBigNumber = new Big(totalRate);
 						const usdFlowRate = flowRateBigNumber
 							.times(new Big('2592000'))
@@ -326,10 +358,10 @@ export default function Home(): JSX.Element {
 			.catch((e) => setUsdFlowRateLoading(false));
 	};
 	useEffect(() => {
-		if (isConnected && usdPrice) {
+		if (isConnected && usdPrice && chain?.id && positions) {
 			getNetFlowRate();
 		}
-	}, [isConnected, positions, usdPrice]);
+	}, [isConnected]);
 
 	if (!isMounted) {
 		return <></>;
@@ -391,7 +423,7 @@ export default function Home(): JSX.Element {
 										<>
 											<h6 className='font-light uppercase tracking-widest text-primary-500 mb-2'>{t('ric-balance')}</h6>
 											<div className='text-slate-100 font-light text-2xl space-x-1'>
-												<BalanceDisplay tokenAddress={RICAddress} showSymbol={true} />
+												<BalanceDisplay tokenAddress={getChainRIC(chain?.id || 137)} showSymbol={true} />
 											</div>
 										</>
 									}
@@ -403,12 +435,14 @@ export default function Home(): JSX.Element {
 												{t('rewards-earned')}
 											</h6>
 											{ricRewardLoading && !aggregatedRICRewards && (
-												<div className='animate-pulse'>
-													<div className='h-4 rounded bg-slate-700'></div>
-												</div>
+												<p className='text-slate-100 font-light text-2xl'>
+													 0 RIC / mo
+												</p>
 											)}
 											{(aggregatedRICRewards || aggregatedRICRewards === 0) && !ricRewardLoading && (
-												<p className='text-slate-100 font-light text-2xl'>{aggregatedRICRewards.toFixed(2)} RIC / mo</p>
+												<p className='text-slate-100 font-light text-2xl'>
+													{aggregatedRICRewards.toFixed(2)} RIC / mo
+												</p>
 											)}
 										</>
 									}
@@ -441,7 +475,7 @@ export default function Home(): JSX.Element {
 									}
 								/>
 								<CardContainer
-									content={<Markets coingeckoPrices={coingeckoPrices} sortedList={sortedList} queries={queries} />}
+									content={sortedList && <Markets coingeckoPrices={coingeckoPrices} sortedList={sortedList} queries={queries} />}
 								/>
 							</div>
 							<div className='space-y-10'>

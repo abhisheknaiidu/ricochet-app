@@ -3,11 +3,10 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
 import AlertAction from '@richochet/utils/alertAction';
 import { checkForApproval } from '@richochet/utils/checkForApproval';
 import { getSuperTokenBalances } from '@richochet/utils/getSuperTokenBalances';
-import { polygon } from '@wagmi/chains';
 import { fetchBalance } from '@wagmi/core';
 import { Coin, namesCoin, namesCoinX } from 'constants/coins';
-import { downgradeTokensList } from 'constants/downgradeConfig';
-import { upgradeTokensList } from 'constants/upgradeConfig';
+import { downgradeTokensList, optimismDowngradeList, mumbaiDowngradeList } from 'constants/downgradeConfig';
+import { upgradeTokensList, optimismUpgradeTokensList, mumbaiUpgradeTokensList } from 'constants/upgradeConfig';
 import { AlertContext } from 'contexts/AlertContext';
 import { BalanceAction } from 'enumerations/balanceActions.enum';
 import { BigNumber, ethers } from 'ethers';
@@ -15,7 +14,7 @@ import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import streamApi from 'redux/slices/streams.slice';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { RoundedButton } from '../button';
 import TokenList from '../token-list';
 
@@ -28,14 +27,13 @@ interface Props {
 	setClose: Function;
 }
 
-const downgradeTokens = downgradeTokensList.map((token) => token.coin).filter((coin) => coin !== Coin.RIC);
-const upgradeTokens = upgradeTokensList.map((token) => token.coin).filter((coin) => coin !== Coin.RIC);
 const coins = [...namesCoin, ...namesCoinX];
 
 export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceList }) => {
 	const { t } = useTranslation('home');
 	const { address } = useAccount();
-	const [unlimited, setUnlimited] = useState(false);
+	const { chain } = useNetwork();
+	//const [unlimited, setUnlimited] = useState(false);
 	const [state, dispatch] = useContext(AlertContext);
 	const [hasApprove, setHasApprove] = useState<boolean>(false);
 	const [upgradeConfig, setUpgradeConfig] = useState<{
@@ -51,7 +49,12 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 			| 'hasUsdcApprove'
 			| 'hasWbtcApprove'
 			| 'hasDaiApprove'
-			| 'hasMaticApprove';
+			| 'hasMaticApprove'
+			| 'hasFDaiApprove'
+			| 'hasFUsdcApprove'
+			| 'hasOpUsdcApprove'
+			| 'hasOpDaiApprove'
+			| 'hasOpEthApprove';
 	}>();
 	const [downgradeConfig, setDowngradeConfig] = useState<{
 		coin: Coin;
@@ -67,13 +70,46 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 	const [upgradeTrigger] = streamApi.useLazyUpgradeQuery();
 	const [approveTrigger] = streamApi.useLazyApproveQuery();
 	const [downgradeTrigger] = streamApi.useLazyDowngradeQuery();
+	const [downgradeTokens, setDowngradeTokens] = useState<Coin[]>();
+	const [upgradeTokens, setUpgradeTokens] = useState<Coin[]>();
+	const [downgradeTokenList, setDowngradeTokenList] = useState<any[]>();
+	const [upgradeTokenList, setUpgradeTokenList] = useState<any[]>();
+
+	//to-do:refactor this
+	useEffect(() => {
+		if (!chain) return;
+		if (chain.id === 137) {
+			const downgradeTokenArr = downgradeTokensList.map((coin) => {return coin.coin})
+			const upgradeTokenArr = upgradeTokensList.map((coin) => {return coin.coin})
+			setDowngradeTokens(downgradeTokenArr);
+			setUpgradeTokens(upgradeTokenArr);
+			setUpgradeTokenList(upgradeTokensList);
+			setDowngradeTokenList(downgradeTokensList);
+		} 
+		if (chain.id === 80001) {
+			const downgradeTokenArr = mumbaiDowngradeList.map((coin) => {return coin.coin})
+			const upgradeTokenArr = mumbaiUpgradeTokensList.map((coin) => {return coin.coin})
+			setDowngradeTokens(downgradeTokenArr);
+			setUpgradeTokens(upgradeTokenArr);
+			setUpgradeTokenList(mumbaiUpgradeTokensList);
+			setDowngradeTokenList(mumbaiDowngradeList);
+		}
+		if (chain.id === 10) {
+			const downgradeTokenArr = optimismDowngradeList.map((coin) => {return coin.coin})
+			const upgradeTokenArr = optimismUpgradeTokensList.map((coin) => {return coin.coin})
+			setDowngradeTokens(downgradeTokenArr);
+			setUpgradeTokens(upgradeTokenArr);
+			setUpgradeTokenList(optimismUpgradeTokensList);
+			setDowngradeTokenList(optimismDowngradeList);
+		}
+	}, [chain])
 
 	useEffect(() => {
 		if (type === BalanceAction.Withdraw && selectedToken !== Coin.SELECT) {
-			const token = downgradeTokensList.find((token) => token.coin === selectedToken);
+			const token = downgradeTokenList?.find((token) => token.coin === selectedToken);
 			setDowngradeConfig(token);
 		} else if (type === BalanceAction.Deposit && selectedToken !== Coin.SELECT) {
-			const upgradeConfig = upgradeTokensList.find((token) => token.coin === selectedToken);
+			const upgradeConfig = upgradeTokenList?.find((token) => token.coin === selectedToken);
 			checkForApproval(upgradeConfig?.tokenAddress!, upgradeConfig?.superTokenAddress!).then((hasApprove) =>
 				setHasApprove(hasApprove)
 			);
@@ -86,7 +122,7 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 			(async () => {
 				const balance = await fetchBalance({
 					address: address!,
-					chainId: polygon.id,
+					chainId: chain?.id,
 					token: upgradeConfig?.tokenAddress as `0x${string}`,
 				}).then((res) => res?.formatted);
 				setWalletBalance(balance);
@@ -95,7 +131,6 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 	}, [upgradeConfig]);
 
 	const handleApprove = () => {
-		console.log('made it to approve', upgradeConfig);
 		if (upgradeConfig) {
 			setIsLoading(true);
 			const approve = approveTrigger({
@@ -135,7 +170,6 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 					const bigNumberAmount = ethers.utils.parseEther(amount);
 					setIsLoading(true);
 					const downgrade = downgradeTrigger({ value: bigNumberAmount.toString(), tokenAddress: downgradeConfig?.tokenAddress! });
-					console.log({ downgrade });
 					downgrade
 						.then((response) => {
 							if (response.isSuccess) {
@@ -163,10 +197,8 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 						const bigNumberAmount = ethers.utils.parseEther(amount);
 						setIsLoading(true);
 						const upgrade = upgradeTrigger({ value: bigNumberAmount.toString(), tokenAddress: upgradeConfig?.superTokenAddress! });
-						console.log({ upgrade });
 						upgrade
 							.then((response: any) => {
-								console.log({ response });
 								if (response.isSuccess) {
 									dispatch(AlertAction.showSuccessAlert('Success', 'Transaction confirmed 👌'));
 								}
@@ -187,7 +219,7 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 	return (
 		<div className='flex flex-col items-start'>
 			<form onSubmit={handleSubmit} className='flex flex-col items-start w-full space-y-6'>
-				{(type === BalanceAction.Withdraw || type === BalanceAction.Deposit) && (
+				{(type === BalanceAction.Withdraw || type === BalanceAction.Deposit) && downgradeTokens && upgradeTokens && (
 					<>
 						<label className='text-slate-100'>
 							{t('token-action')} {t(type)}?

@@ -1,7 +1,8 @@
 import { readContract } from '@wagmi/core';
 import { referralABI } from 'constants/ABIs/referralABI';
-import { rexReferralAddress } from 'constants/polygon_config';
 import { ethers } from 'ethers';
+
+//TO DO MAKE THIS MULTI CHAIN COMPATIBLE
 
 export enum AFFILIATE_STATUS {
 	'INACTIVE' = 'inactive',
@@ -26,16 +27,17 @@ export const filterValidationErrors = (input: string) =>
 		return acc;
 	}, []);
 
-export const getAffiliateStatus = async (address: string, setCurrentReferralId = (referralId: string) => {}) => {
+export const getAffiliateStatus = async (address: string, referral: string, setCurrentReferralId = (referralId: string) => {}) => {
+	//note add multi network support here
 	const affiliateId: any = await readContract({
-		address: rexReferralAddress,
+		address: referral as `0x${string}}`,
 		abi: referralABI,
 		functionName: 'addressToAffiliate',
 		args: [address.toLowerCase()],
 	});
 
 	const res: any = await readContract({
-		address: rexReferralAddress,
+		address: referral as `0x${string}}`,
 		abi: referralABI,
 		functionName: 'affiliates',
 		args: [affiliateId],

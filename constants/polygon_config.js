@@ -1,3 +1,5 @@
+import { fUSDCxfDAI, fDAIxfUSDC, mumbaiRICAddress } from "./mumbai_config";
+import { optimismRICAddress } from "./optimism_config";
 // Config addresses //
 
 export const chainId = 137;
@@ -181,6 +183,8 @@ export const exchangeAddresses = {
 	twoWayIbEthIbUsd: twoWayMarketibAlluoUSDETHAddress,
 	twoWayIbUsdIbBTC: twoWayMarketibAlluoUSDBTCAddress,
 	twoWayIbBTCIbUsd: twoWayMarketibAlluoUSDBTCAddress,
+	fUSDCxfDAI: fUSDCxfDAI,
+	fDAIxfUSDC: fDAIxfUSDC,
 };
 
 // V1 Markets Deprecated //
@@ -224,3 +228,14 @@ export const usdcxibAlluoUSDAddress = '0xE53dd10d49C8072d68d48c163d9e1A219bd6852
 //Deprecated Waterdrop
 
 export const claimAddress = '0x9dA677c3423E0eBc1e3d7c0a86e9b9a34Bbd2874';
+
+export const getChainRIC = (network) => {
+
+	const RICs = {
+		10: optimismRICAddress,
+		137: RICAddress,
+		80001: mumbaiRICAddress,
+	}
+
+	return RICs[network]
+}

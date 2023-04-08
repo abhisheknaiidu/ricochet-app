@@ -1,11 +1,12 @@
 import { formatCurrency } from '@richochet/utils/helperFunctions';
 import { geckoMapping } from 'constants/coingeckoMapping';
-import { upgradeTokensList } from 'constants/upgradeConfig';
+import { upgradeTokensList, mumbaiUpgradeTokensList, optimismUpgradeTokensList } from 'constants/upgradeConfig';
 import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { TokenData } from '../balances';
+import { useNetwork } from 'wagmi';
 
 interface Props {
 	tokens: TokenData[];
@@ -23,6 +24,22 @@ export const DoughnutChart: NextPage<Props> = ({ tokens, geckoPriceList, balance
 	const { t } = useTranslation('home');
 	const [total, setTotal] = useState<number>(0);
 	const [chartData, setChartData] = useState<ChartData[]>([]);
+	const [tokenList, setTokenList] = useState<any>([]);
+	const { chain } = useNetwork()
+
+	useEffect(() => {
+		if (!chain) return;
+		if (chain?.id === 80001) {
+			setTokenList(mumbaiUpgradeTokensList);
+		}
+		if (chain?.id === 137) {
+			setTokenList(upgradeTokensList);
+		}
+		if (chain?.id === 10) {
+			setTokenList(optimismUpgradeTokensList);
+		}
+	}, [chain])
+
 	useEffect(() => {
 		const data: ChartData[] = [];
 		tokens
@@ -36,8 +53,9 @@ export const DoughnutChart: NextPage<Props> = ({ tokens, geckoPriceList, balance
 			});
 		setChartData(data);
 	}, [tokens]);
+
 	useEffect(() => {
-		const total = upgradeTokensList.reduce((total, token) => {
+		const total = tokenList.reduce((total: any, token: any) => {
 			const balancess =
 				Object.keys(balances).length &&
 				Object.keys(geckoPriceList).length &&
@@ -51,6 +69,7 @@ export const DoughnutChart: NextPage<Props> = ({ tokens, geckoPriceList, balance
 		}, 0);
 		setTotal(total);
 	}, [tokens, balances, geckoPriceList, geckoMapping]);
+
 	return (
 		<div className='h-52 w-52'>
 			<ResponsiveContainer height='100%' width='100%'>

@@ -1,13 +1,12 @@
 import { useCoingeckoPrices } from '@richochet/hooks/useCoingeckoPrices';
-import { polygon } from '@wagmi/chains';
 import { fetchBalance } from '@wagmi/core';
 import { Coin } from 'constants/coins';
-import { upgradeTokensList } from 'constants/upgradeConfig';
+import { upgradeTokensList, mumbaiUpgradeTokensList, optimismUpgradeTokensList } from 'constants/upgradeConfig';
 import { colors } from 'enumerations/colors.enum';
 import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { OutlineButton, SolidButton } from '../button';
 import { DoughnutChart } from '../graphs';
 import { DataTable } from '../table';
@@ -25,7 +24,6 @@ export interface TokenData {
 	ricAmount: string;
 	ricUsdAmount: string;
 	color: string;
-	// dollarVal: number;
 }
 
 const headerTitles = ['token', 'ricochet-balance', 'wallet-balance'];
@@ -33,23 +31,40 @@ const headerTitles = ['token', 'ricochet-balance', 'wallet-balance'];
 export const Balances: NextPage<Props> = ({ tokens, balances }): JSX.Element => {
 	const { t } = useTranslation('home');
 	const { address, isConnected } = useAccount();
+	const { chain } = useNetwork()
 	const [action, setAction] = useState(0);
 	const [tabsClosed, setTabsClosed] = useState(true);
 	const coingeckoPrices = useCoingeckoPrices();
-	const [sortedUpgradeTokensList, setSortedUpgradeTokensList] = useState(upgradeTokensList);
+	const [sortedUpgradeTokensList, setSortedUpgradeTokensList] = useState<any>();
 	const [geckoPriceList, setGeckoPriceList] = useState<Object>({});
 	const [tokenList, setTokenList] = useState<TokenData[]>([]);
+
 	useEffect(() => {
-		if (isConnected) {
+		setSortedUpgradeTokensList([])
+		if (!chain) return;
+		if (chain?.id === 80001) {
+			setSortedUpgradeTokensList(mumbaiUpgradeTokensList);
+		}
+		if (chain?.id === 137) {
+			setSortedUpgradeTokensList(upgradeTokensList);
+		}
+		if (chain?.id === 10) {
+			setSortedUpgradeTokensList(optimismUpgradeTokensList);
+		}
+	}, [chain?.id, balances])
+
+	useEffect(() => {
+		if (isConnected && chain?.id) {
 			if (tokens) setGeckoPriceList(tokens);
 			(async () => {
 				if (Object.keys(geckoPriceList).length && Object.keys(balances).length) {
 					await Promise.all(
-						sortedUpgradeTokensList.map(async (token) => {
+						sortedUpgradeTokensList.map(async (token: any) => {
+							if (!address) return;
 							const balance = await fetchBalance({
-								address: address!,
-								chainId: polygon.id,
-								token: token.coin !== Coin.RIC ? (token.tokenAddress as `0x${string}`) : undefined,
+								address: address,
+								chainId: chain.id,
+								token: token.coin !== Coin.RIC && token.coin !== Coin.OpRIC ? (token.tokenAddress as `0x${string}`) : undefined,
 							});
 							return {
 								token: token.coin,
@@ -69,16 +84,19 @@ export const Balances: NextPage<Props> = ({ tokens, balances }): JSX.Element => 
 					).then((tokens) => {
 						// sort array by ric balance in descending order
 						const sortedTokens = tokens.sort((a, b) => parseFloat(b.ricAmount) - parseFloat(a.ricAmount));
-						if (sortedTokens.length > 0) setTokenList(sortedTokens);
+						if (sortedTokens.length > 0) {
+							setTokenList(sortedTokens)
+						};
 					});
 				}
 			})();
 		}
 	}, [isConnected, tokens, balances, geckoPriceList, sortedUpgradeTokensList]);
+
 	return (
 		<>
 			<p className='font-light uppercase tracking-widest text-primary-500'>{t('your-balances')}</p>
-			{!tabsClosed && (
+			{!tabsClosed && balances && (
 				<BalanceTabs close={tabsClosed} setClose={setTabsClosed} action={action} balanceList={balances} />
 			)}
 			{tabsClosed && (
@@ -113,7 +131,7 @@ export const Balances: NextPage<Props> = ({ tokens, balances }): JSX.Element => 
 					<div className='flex justify-center my-4'>
 						<DoughnutChart tokens={tokenList} geckoPriceList={geckoPriceList} balances={balances} />
 					</div>
-					<DataTable headers={headerTitles} rowData={tokenList} tableLoaderRows={6} />
+					{ tokenList && <DataTable headers={headerTitles} rowData={tokenList} tableLoaderRows={6} />}
 				</>
 			)}
 		</>

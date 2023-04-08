@@ -15,7 +15,7 @@ import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 import streamApi from 'redux/slices/streams.slice';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { OutlineButton, RoundedButton } from '../button';
 import { PositionData } from './positions';
 
@@ -33,6 +33,7 @@ enum Action {
 export const EditPosition: NextPage<Props> = ({ setClose, position }) => {
 	const { t } = useTranslation('home');
 	const { address } = useAccount();
+	const { chain } = useNetwork();
 	const [upgradeConfig, setUpgradeConfig] = useState<{
 		coin: Coin;
 		tokenAddress: string;
@@ -64,8 +65,7 @@ export const EditPosition: NextPage<Props> = ({ setClose, position }) => {
 		if (!position) return;
 		const exchangeKey = position?.flowKey?.replace('FlowQuery', '') as ExchangeKeys;
 		const fetchShareScaler = async (exchangeKey: ExchangeKeys, tokenA: string, tokenB: string) => {
-			const shareScaler = await getShareScaler(exchangeKey, tokenA, tokenB).then((res) => res);
-			console.log(shareScaler);
+			const shareScaler = await getShareScaler(exchangeKey, tokenA, tokenB, chain?.id!).then((res) => res);
 			setShareScaler(shareScaler);
 		};
 		fetchShareScaler(exchangeKey, position?.tokenA, position?.tokenB);
@@ -114,10 +114,8 @@ export const EditPosition: NextPage<Props> = ({ setClose, position }) => {
 					const bigNumberAmount = ethers.BigNumber.from(amount).toString();
 					setIsLoading(true);
 					const upgrade = upgradeTrigger({ value: bigNumberAmount, tokenAddress: upgradeConfig?.superTokenAddress! });
-					console.log({ upgrade });
 					upgrade
 						.then((response: any) => {
-							console.log({ response });
 							if (response.isSuccess) {
 								dispatch(AlertAction.showSuccessAlert('Success', 'Transaction confirmed 👌'));
 							}

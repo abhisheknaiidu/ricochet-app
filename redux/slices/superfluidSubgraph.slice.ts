@@ -10,8 +10,8 @@ const superfluidSubgraphApi = createApi({
 	baseQuery: fetchBaseQuery({ baseUrl: 'https://api.thegraph.com/subgraphs/name/superfluid-finance' }),
 	endpoints: (builder) => ({
 		queryFlows: builder.mutation({
-			query: (queryAddress: string) => ({
-				url: '/superfluid-matic',
+			query: ({queryAddress, network}) => ({
+				url: `${network}`,
 				method: 'POST',
 				headers: new Headers({
 					'content-type': 'application/json ',
@@ -20,22 +20,22 @@ const superfluidSubgraphApi = createApi({
 			}),
 		}),
 		queryDistributions: builder.mutation({
-			query: (subscriber: string) => ({
-				url: '/protocol-v1-matic',
+			query: ({subscriber, network}) => ({
+				url: `${network}`,
 				method: 'POST',
 				body: { query: getQueryDistributions(subscriber) },
 			}),
 		}),
 		queryStreams: builder.mutation({
-			query: (address: string) => ({
-				url: '/protocol-v1-matic',
+			query: ({address, network}) => ({
+				url: `${network}`,
 				method: 'POST',
 				body: { query: getQueryStreams(address) },
 			}),
 		}),
 		queryReceived: builder.mutation({
-			query: (receiver: string) => ({
-				url: '/protocol-v1-matic',
+			query: ({receiver, network}) => ({
+				url: `${network}`,
 				method: 'POST',
 				body: { query: getQueryReceived(receiver) },
 			}),

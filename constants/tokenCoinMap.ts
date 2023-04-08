@@ -18,6 +18,15 @@ import {
 	StIbAlluoBTCAddress,
 } from './polygon_config';
 
+import {
+	fUSDC,
+	fDAI,
+	fUSDCx,
+	fDAIx,
+} from './mumbai_config';
+
+import { OPToken, optimismDAI, optimismDAIx, optimismUSDC, optimismUSDCx, OPx } from './optimism_config';
+
 type Transformer = {
 	token: string;
 	coin: Coin;
@@ -87,5 +96,45 @@ export const tokenCoinTransformer: Transformer[] = [
 	{
 		token: DAIxAddress,
 		coin: Coin.DAIx,
+	},
+	{
+		token: fDAIx,
+		coin: Coin.FDAIx,
+	},
+	{
+		token: fUSDCx,
+		coin: Coin.FUSDCx,
+	},
+	{
+		token: fUSDC,
+		coin: Coin.FUSDC,
+	},
+	{
+		token: fDAI,
+		coin: Coin.FDAI,
+	},
+	{
+		token: OPToken,
+		coin: Coin.OP,
+	},
+	{
+		token: OPx,
+		coin: Coin.OPx,
+	},
+	{
+		token: optimismUSDCx,
+		coin: Coin.OPUSDCx,
+	},
+	{
+		token: optimismUSDC,
+		coin: Coin.OPUSDC,
+	},
+	{
+		token: optimismDAI,
+		coin: Coin.OPDAI,
+	},
+	{
+		token: optimismDAIx,
+		coin: Coin.OPDAIx,
 	},
 ];

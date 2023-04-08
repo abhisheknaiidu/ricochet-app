@@ -10,7 +10,18 @@ import {
 	WETHxAddress
 } from 'constants/polygon_config';
 
+import {
+	fDAIx,
+	fUSDCx,
+} from 'constants/mumbai_config';
+
+import { optimismUSDCx, optimismDAIx, OPx } from './optimism_config';
+
 export const coingeckoIds = new Map<string, string>([
+	[optimismUSDCx, 'usd-coin'],
+	[optimismDAIx, 'dai'],
+	[fDAIx, 'dai'],
+	[fUSDCx, 'usd-coin'],
 	[DAIxAddress, 'dai'],
 	[USDCxAddress, 'usd-coin'],
 	[WETHxAddress, 'weth'],
@@ -22,4 +33,5 @@ export const coingeckoIds = new Map<string, string>([
 	[StIbAlluoETHAddress, 'weth'],
 	[StIbAlluoUSDAddress, 'usd-coin'],
 	[StIbAlluoBTCAddress, 'wrapped-bitcoin'],
+	[OPx, 'optimism'],
 ]);

@@ -40,7 +40,6 @@ const streamApi = createApi({
 					const { amount, config } = payload;
 					// we must initialize a contract address with idaContract: getContract(idaAddress, idaABI, web3);
 					const idaContract = await getContract({ address: idaAddress, abi: idaABI });
-					console.log(idaContract);
 					// We must normalize the payload amount for superfluid function
 					const normalizedAmount = ethers.utils.parseEther(amount);
 					//  Math.round((Number(amount) * 1e18) / 2592000);
@@ -59,7 +58,7 @@ const streamApi = createApi({
 						config.tokenA,
 						config.tokenB,
 						normalizedAmount,
-						config.referralId
+						config.referralId,
 					);
 					return tx?.wait(1).then((res) => {
 						return {

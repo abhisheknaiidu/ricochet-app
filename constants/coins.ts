@@ -14,6 +14,7 @@ import slp from '@richochet/assets/images/coins/slp.svg';
 import sushi from '@richochet/assets/images/coins/sushiswap.svg';
 import usdt from '@richochet/assets/images/coins/tetherUsdt.svg';
 import usdc from '@richochet/assets/images/coins/usdCoin.svg';
+import op from '@richochet/assets/images/coins/op.svg';
 
 export enum Coin {
 	SELECT = 'Select Coin',
@@ -41,17 +42,32 @@ export enum Coin {
 	MATICx = 'MATICx',
 	SUSHIx = 'SUSHIx',
 	IDLEx = 'IDLEx',
+	FDAIx = 'FDAIx',
+	FDAI = 'FDAI',
+	FUSDCx = 'FUSDCx',
+	FUSDC = 'FUSDC',
+	MumbaiRIC = 'RIC',
+	OpRIC = 'RIC',
 	IbAlluoETH = 'IbAlluoETH',
 	IbAlluoUSD = 'IbAlluoUSD',
 	StIbAlluoETH = 'StIbAlluoETH',
 	StIbAlluoUSD = 'StIbAlluoUSD',
 	StIbAlluoBTC = 'StIbAlluoBTC',
 	IbAlluoBTC = 'IbAlluoBTC',
+	OPUSDC = 'USDC',
+	OPDAI = 'DAI',
+	OPUSDCx = 'USDCx',
+	OPDAIx = 'DAIx',
+	OP = 'OP',
+	OPx = 'OPx',
 	// REXSHIRT = 'REXSHIRT',
 	// REXHAT = 'REXHAT',
 }
 
 export const namesCoin = [
+	Coin.OP,
+	Coin.OPUSDC,
+	Coin.DAI,
 	Coin.USDC,
 	Coin.DAI,
 	Coin.MKR,
@@ -65,9 +81,12 @@ export const namesCoin = [
 	Coin.IbAlluoETH,
 	Coin.IbAlluoUSD,
 	Coin.IbAlluoBTC,
+	Coin.FDAI,
+	Coin.FUSDC,
 ];
 
 export const namesCoinX = [
+	Coin.OPx,
 	Coin.DAIx,
 	Coin.MKRx,
 	Coin.USDCx,
@@ -80,9 +99,19 @@ export const namesCoinX = [
 	Coin.StIbAlluoETH,
 	Coin.StIbAlluoUSD,
 	Coin.StIbAlluoBTC,
+	Coin.FDAIx,
+	Coin.FUSDCx,
+	Coin.OPUSDCx,
+	Coin.DAIx,
 ];
 
 export const iconsCoin: Partial<Record<Coin, string>> = {
+	[Coin.OP]: op,
+	[Coin.OPx]: op,
+	[Coin.OPUSDC]: usdc,
+	[Coin.OPDAI]: dai,
+	[Coin.OPDAIx]: dai,
+	[Coin.OPUSDCx]: usdc,
 	[Coin.USDC]: usdc,
 	[Coin.WBTC]: wbtc,
 	[Coin.ETH]: eth,
@@ -95,8 +124,12 @@ export const iconsCoin: Partial<Record<Coin, string>> = {
 	[Coin.RIC]: ric,
 	// [Coin.REXSHIRT]: rexshirt,
 	// [Coin.REXHAT]: rexhat,
+	[Coin.FDAI]: dai,
+	[Coin.FUSDC]: usdc,
 	[Coin.WETH]: eth,
 	[Coin.SLP]: slp,
+	[Coin.FDAIx]: dai,
+	[Coin.FUSDCx]: usdc,
 	[Coin.DAIx]: dai,
 	[Coin.MKRx]: mkr,
 	[Coin.USDCx]: usdc,

@@ -10,6 +10,12 @@ import {
 	StIbAlluoBTCAddress,
 } from './polygon_config';
 
+import {
+	fUSDCx,
+	fDAIx,
+} from './mumbai_config';
+import { optimismDAIx, optimismUSDCx, OPx } from './optimism_config';
+
 export const downgradeTokensList = [
 	{
 		coin: Coin.USDCx,
@@ -44,3 +50,29 @@ export const downgradeTokensList = [
 		tokenAddress: StIbAlluoBTCAddress,
 	},
 ];
+
+export const mumbaiDowngradeList = [
+	{
+		coin: Coin.FDAIx,
+		tokenAddress: fDAIx,
+	},
+	{
+		coin: Coin.FUSDCx,
+		tokenAddress: fUSDCx,
+	},
+]
+
+export const optimismDowngradeList = [
+	{
+		coin: Coin.OPUSDCx,
+		tokenAddress: optimismUSDCx,
+	},
+	{
+		coin: Coin.OPDAIx,
+		tokenAddress: optimismDAIx,
+	},
+	{
+		coin: Coin.OPx,
+		tokenAddress: OPx,
+	}
+]

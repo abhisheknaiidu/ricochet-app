@@ -47,6 +47,7 @@ export const CoinChange: NextPage<Props> = ({ coinA, coinB, token, type }): JSX.
 		return (
 			<>
 				<Image width='24' height='24' src={iconsCoin[token as Coin]!} alt={token} />
+				{/*refactor this garbage*/}
 				<span
 					className={combineClasses(
 						token === Coin.ETH

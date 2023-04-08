@@ -1,22 +1,16 @@
 export type Flow = {
-	lastUpdate: string;
-	flowRate: string;
-	sum: string;
-	recipient?: {
-		id: string;
-	};
-	owner?: {
+	currentFlowRate: string;
+	updatedAtTimestamp: string;
+	sender: {
 		id: string;
 	};
 	token: {
 		id: string;
 		symbol: string;
 	};
-	events: Array<{
+	flowUpdatedEvents: {
 		flowRate: string;
-		sum: string;
-		transaction: {
-			timestamp: string;
-		};
-	}>;
+		timestamp: string;
+		totalSenderFlowRate: string;
+	};
 };

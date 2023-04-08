@@ -78,7 +78,7 @@ export const DataTable: NextPage<Props> = ({
 												</p>
 											</td>
 											<td className='px-6 py-4 whitespace-nowrap'>
-												<p>{formatCurrency(parseFloat(data.streamedUsdValue))}</p>
+												<p>{formatCurrency(parseFloat(data.input.toFixed(3)))}</p>
 												<p className='text-slate-400'>
 													{data.input.toFixed(3)} <span className='text-sm'>{data.coinA}x</span>
 												</p>
@@ -169,7 +169,7 @@ export const DataTable: NextPage<Props> = ({
 						1
 					</button>
 					{gaps.before ? '...' : ''}
-					{gaps.paginationGroup.map((num) => (
+					{gaps.paginationGroup.map((num: number) => (
 						<button onClick={() => setPage(num)} key={num} className={`${page === num ? 'text-slate-100' : ''}`}>
 							{num}
 						</button>
