@@ -5,6 +5,7 @@ import { ExchangeKeys } from 'enumerations/exchangeKeys.enum';
 import { indexIDA } from '../constants/flowConfig';
 import { getExchangeAddressFromKey } from './getExchangeAddress';
 
+//To-do: update this when we depricate all v2 markets
 export const getShareScaler = async (
 	exchangeKey: ExchangeKeys,
 	tokenA: string,
