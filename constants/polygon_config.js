@@ -1,5 +1,5 @@
-import { fUSDCxfDAI, fDAIxfUSDC, mumbaiRICAddress } from "./mumbai_config";
-import { optimismRICAddress } from "./optimism_config";
+import { fUSDCxfDAI, fDAIxfUSDC, mumbaiRICAddress } from './mumbai_config';
+import { optimismRICAddress } from './optimism_config';
 // Config addresses //
 
 export const chainId = 137;
@@ -14,8 +14,7 @@ export const rexShirtWaterdrop = '0x4965DD6Cc99e20B33B744374F132f7b5F8333a06';
 export const alluoWaterdrop = '0x114e5EAbd33B34F3B7f481Df4fc2617dE6cd2B66';
 export const uniwhalesWaterdrop = '0xa576a3E103f437f9845a400cd909CA5de6456A84';
 
-
-// V3 CONTRACTS // 
+// V3 CONTRACTS //
 
 export const USDCxDAI = '0x7ACe300B31b8dDBFDFa63EdA479bC2c2a01E9356';
 export const DAIxUSDC = '0x0FC83C3b06152dd3B62fDaCf8075C8c4D5FbdFb3';
@@ -169,6 +168,20 @@ export const marketArray = [
 export const exchangeAddresses = {
 	ricRexShirt: ricRexShirtLaunchpadAddress,
 	ricRexHat: ricRexHatLaunchpadAddress,
+	usdcxdai: USDCxDAI,
+	daixusdc: DAIxUSDC,
+	usdcxeth: USDCxETH,
+	ethxusdc: ETHxUSDC,
+	daixeth: DAIxETH,
+	ethxdai: ETHxDAI,
+	usdcxwbtc: USDCxWBTC,
+	wbtcxusdc: WBTCxUSDC,
+	daixwbtc: DAIxWBTC,
+	wbtcxdai: WBTCxDAI,
+	usdcxmatic: USDCxMATIC,
+	maticxusdc: MATICxUSDC,
+	maticxdai: MATICxDAI,
+	daixmatic: DAIxMATIC,
 	maticx: MATICxAddress,
 	daix: DAIxAddress,
 	dai: DAIAddress,
@@ -245,7 +258,6 @@ export const maticxDaixExchangeAddress = '0x250efbB94De68dD165bD6c98e804E08153Eb
 
 //USDC X RIC
 
-
 //USDC X IBALLUOUSD
 export const usdcxibAlluoUSDAddress = '0xE53dd10d49C8072d68d48c163d9e1A219bd6852D';
 
@@ -254,12 +266,11 @@ export const usdcxibAlluoUSDAddress = '0xE53dd10d49C8072d68d48c163d9e1A219bd6852
 export const claimAddress = '0x9dA677c3423E0eBc1e3d7c0a86e9b9a34Bbd2874';
 
 export const getChainRIC = (network) => {
-
 	const RICs = {
 		10: optimismRICAddress,
 		137: RICAddress,
 		80001: mumbaiRICAddress,
-	}
+	};
 
-	return RICs[network]
-}
+	return RICs[network];
+};
