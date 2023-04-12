@@ -52,6 +52,11 @@ import {
 	OPx,
 	opDAIxopUSDC,
 	USDCxOP,
+	DAIxOP,
+	OPxDAI,
+	optimismETHx,
+	opUSDCxopETH,
+	opDAIxopETH,
 } from './optimism_config';
 
 // To-Do: Refactor this
@@ -81,6 +86,10 @@ export enum FlowEnum {
 	opDAIxopUSDC = 'opDAIxopUSDC',
 	OPxUSDC = 'OPxUSDC',
 	USDCxOP = 'USDCxOP',
+	OPxDAI = 'OPxDAI',
+	DAIxOP = 'DAIxOP',
+	opUSDCxopETH = 'opUSDCxopETH',
+	opDAIxopETH = 'opDAIxopETH',
 	USDCxDAI = 'USDCxDAI',
 	DAIxUSDC = 'DAIxUSDC',
 	USDCxETH = 'USDCxETH',
@@ -370,6 +379,42 @@ export const indexIDA: IndexIDAType = [
 		exchangeAddress: opUSDCxopDAI,
 		input: optimismUSDCx,
 		output: optimismDAIx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: DAIxOP,
+		input: optimismDAIx,
+		output: OPx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: OPxDAI,
+		input: OPx,
+		output: optimismDAIx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: opUSDCxopETH,
+		input: optimismUSDCx,
+		output: optimismETHx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: opDAIxopETH,
+		input: optimismDAIx,
+		output: optimismETHx,
 		subsidy: optimismRICAddress,
 		subsidyIndex: 1,
 		inputIndex: 0, // just a placeholder, not used
@@ -737,6 +782,42 @@ export const optimismMarkets: InvestmentFlow[] = [
 		coinA: Coin.OPUSDC,
 		coinB: Coin.OP,
 		flowKey: FlowEnum.USDCxOP,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: DAIxOP,
+		tokenA: optimismDAIx,
+		tokenB: OPx,
+		coinA: Coin.OPDAI,
+		coinB: Coin.OP,
+		flowKey: FlowEnum.DAIxOP,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: OPxDAI,
+		tokenA: OPx,
+		tokenB: optimismDAIx,
+		coinA: Coin.OP,
+		coinB: Coin.OPDAI,
+		flowKey: FlowEnum.OPxDAI,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: opUSDCxopETH,
+		tokenA: optimismUSDCx,
+		tokenB: optimismETHx,
+		coinA: Coin.USDC,
+		coinB: Coin.ETH,
+		flowKey: FlowEnum.opUSDCxopETH,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: opDAIxopETH,
+		tokenA: optimismDAIx,
+		tokenB: optimismETHx,
+		coinA: Coin.DAI,
+		coinB: Coin.ETH,
+		flowKey: FlowEnum.opDAIxopETH,
 		type: FlowTypes.market,
 	},
 ];
