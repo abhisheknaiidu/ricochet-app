@@ -5,7 +5,7 @@ import { getCoingeckoPairs } from '@richochet/utils/getCoingeckoPairs';
 import { getShareScaler } from '@richochet/utils/getShareScaler';
 import Big from 'big.js';
 import { Coin } from 'constants/coins';
-import { flowConfig, FlowTypes, InvestmentFlow, getFlowDirectory, FlowEnum } from 'constants/flowConfig';
+import { FlowTypes, InvestmentFlow, getFlowDirectory } from 'constants/flowConfig';
 import { AlertContext } from 'contexts/AlertContext';
 import { ExchangeKeys } from 'enumerations/exchangeKeys.enum';
 import { NextPage } from 'next';
