@@ -1,7 +1,15 @@
 import { Coin } from './coins';
 import {
 	DAIxAddress,
+	DAIxETH,
+	DAIxMATIC,
+	DAIxUSDC,
+	DAIxWBTC,
+	ETHxDAI,
+	ETHxUSDC,
 	MATICxAddress,
+	MATICxDAI,
+	MATICxUSDC,
 	RexHatAddress,
 	RexShirtAddress,
 	RICAddress,
@@ -18,22 +26,21 @@ import {
 	twoWayMarketWBTCAddress,
 	twoWayWETHMarketAddress,
 	USDCxAddress,
+	USDCxDAI,
+	USDCxETH,
 	usdcxibAlluoUSDAddress,
+	USDCxMATIC,
 	usdcxRicExchangeAddress,
+	USDCxWBTC,
 	WBTCxAddress,
-	WETHxAddress
+	WBTCxDAI,
+	WBTCxUSDC,
+	WETHxAddress,
 } from './polygon_config';
 
-import {
-	fUSDCxfDAI,
-	fDAIxfUSDC,
-	mumbaiRICAddress,
-	fUSDCx,
-	fDAIx,
-	mumbaiLaunchpad
-} from './mumbai_config';
+import { fUSDCxfDAI, fDAIxfUSDC, mumbaiRICAddress, fUSDCx, fDAIx, mumbaiLaunchpad } from './mumbai_config';
 
-import { 
+import {
 	optimismLaunchpad,
 	optimismRICAddress,
 	optimismUSDCx,
@@ -44,8 +51,13 @@ import {
 	OPxUSDC,
 	OPx,
 	opDAIxopUSDC,
-	USDCxOP
-} from './optimism_config'
+	USDCxOP,
+	DAIxOP,
+	OPxDAI,
+	optimismETHx,
+	opUSDCxopETH,
+	opDAIxopETH,
+} from './optimism_config';
 
 // To-Do: Refactor this
 
@@ -73,7 +85,25 @@ export enum FlowEnum {
 	opUSDCxopDAI = 'opUSDCxopDAI',
 	opDAIxopUSDC = 'opDAIxopUSDC',
 	OPxUSDC = 'OPxUSDC',
-	USDCxOP = 'USDCxOP'
+	USDCxOP = 'USDCxOP',
+	OPxDAI = 'OPxDAI',
+	DAIxOP = 'DAIxOP',
+	opUSDCxopETH = 'opUSDCxopETH',
+	opDAIxopETH = 'opDAIxopETH',
+	USDCxDAI = 'USDCxDAI',
+	DAIxUSDC = 'DAIxUSDC',
+	USDCxETH = 'USDCxETH',
+	ETHxUSDC = 'ETHxUSDC',
+	DAIxETH = 'DAIxETH',
+	ETHxDAI = 'ETHxDAI',
+	USDCxWBTC = 'USDCxWBTC',
+	WBTCxUSDC = 'WBTCxUSDC',
+	DAIxWBTC = 'DAIxWBTC',
+	WBTCxDAI = 'WBTCxDAI',
+	USDCxMATIC = 'USDCxMATIC',
+	MATICxUSDC = 'MATICxUSDC',
+	DAIxMATIC = 'DAIxMATIC',
+	MATICxDAI = 'MATICxDAI',
 }
 
 type IndexIDAType = {
@@ -101,7 +131,6 @@ export type InvestmentFlow = {
 	flowKey: FlowEnum;
 	type: FlowTypes;
 };
-
 
 // POLYGON
 
@@ -143,95 +172,139 @@ export const indexIDA: IndexIDAType = [
 		outputIndex: 1,
 	},
 	{
-		exchangeAddress: twoWayWETHMarketAddress,
+		exchangeAddress: USDCxDAI,
+		input: USDCxAddress,
+		output: DAIxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: DAIxUSDC,
+		input: DAIxAddress,
+		output: USDCxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+
+	{
+		exchangeAddress: USDCxETH,
 		input: USDCxAddress,
 		output: WETHxAddress,
 		subsidy: RICAddress,
-		subsidyIndex: 3,
+		subsidyIndex: 1,
 		inputIndex: 0,
-		outputIndex: 1,
+		outputIndex: 0,
 	},
 	{
-		exchangeAddress: twoWayWETHMarketAddress,
+		exchangeAddress: ETHxUSDC,
 		input: WETHxAddress,
 		output: USDCxAddress,
 		subsidy: RICAddress,
-		subsidyIndex: 2,
-		inputIndex: 1,
+		subsidyIndex: 1,
+		inputIndex: 0,
 		outputIndex: 0,
 	},
+
 	{
-		exchangeAddress: twoWayMarketWBTCAddress,
-		input: USDCxAddress,
-		output: WBTCxAddress,
-		subsidy: RICAddress,
-		subsidyIndex: 3,
-		inputIndex: 0,
-		outputIndex: 1,
-	},
-	{
-		exchangeAddress: twoWayMarketWBTCAddress,
-		input: WBTCxAddress,
-		output: USDCxAddress,
-		subsidy: RICAddress,
-		subsidyIndex: 2,
-		inputIndex: 1,
-		outputIndex: 0,
-	},
-	{
-		exchangeAddress: twoWayMarketDAIWETHAddress,
-		input: DAIxAddress,
-		output: WETHxAddress,
-		subsidy: RICAddress,
-		subsidyIndex: 3,
-		inputIndex: 0,
-		outputIndex: 1,
-	},
-	{
-		exchangeAddress: twoWayMarketDAIWETHAddress,
+		exchangeAddress: ETHxDAI,
 		input: WETHxAddress,
 		output: DAIxAddress,
 		subsidy: RICAddress,
-		subsidyIndex: 2,
-		inputIndex: 1,
-		outputIndex: 0,
-	},
-	{
-		exchangeAddress: twoWayMarketRICUSDCAddress,
-		input: RICAddress,
-		output: USDCxAddress,
-		subsidy: WETHxAddress,
-		subsidyIndex: 2,
-		inputIndex: 1,
-		outputIndex: 0,
-	},
-	{
-		exchangeAddress: twoWayMarketRICUSDCAddress,
-		input: USDCxAddress,
-		output: RICAddress,
-		subsidy: WETHxAddress,
-		subsidyIndex: 3,
+		subsidyIndex: 1,
 		inputIndex: 0,
-		outputIndex: 1,
+		outputIndex: 0,
 	},
 	{
-		exchangeAddress: twoWayMarketMATICUSDCAddress,
-		input: MATICxAddress,
+		exchangeAddress: DAIxETH,
+		input: DAIxAddress,
+		output: WETHxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+
+	{
+		exchangeAddress: USDCxWBTC,
+		input: USDCxAddress,
+		output: WBTCxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: WBTCxUSDC,
+		input: WBTCxAddress,
 		output: USDCxAddress,
 		subsidy: RICAddress,
-		subsidyIndex: 2,
-		inputIndex: 1,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+
+	{
+		exchangeAddress: DAIxWBTC,
+		input: DAIxAddress,
+		output: WBTCxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
 		outputIndex: 0,
 	},
 	{
-		exchangeAddress: twoWayMarketMATICUSDCAddress,
+		exchangeAddress: WBTCxDAI,
+		input: WBTCxAddress,
+		output: DAIxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+
+	{
+		exchangeAddress: DAIxMATIC,
+		input: DAIxAddress,
+		output: MATICxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: MATICxDAI,
+		input: MATICxAddress,
+		output: DAIxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+
+	{
+		exchangeAddress: USDCxMATIC,
 		input: USDCxAddress,
 		output: MATICxAddress,
 		subsidy: RICAddress,
-		subsidyIndex: 3,
+		subsidyIndex: 1,
 		inputIndex: 0,
-		outputIndex: 1,
+		outputIndex: 0,
 	},
+	{
+		exchangeAddress: MATICxUSDC,
+		input: MATICxAddress,
+		output: USDCxAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
+	},
+
+	//V2 STUFF
 	{
 		exchangeAddress: usdcxRicExchangeAddress,
 		input: USDCxAddress,
@@ -257,13 +330,13 @@ export const indexIDA: IndexIDAType = [
 		outputIndex: 0,
 	},
 	{
-	 	exchangeAddress: usdcxibAlluoUSDAddress,
-	 	input: USDCxAddress,
-	 	output: StIbAlluoUSDAddress,
-	 	subsidy: RICAddress,
-	 	subsidyIndex: 1,
-	 	inputIndex: 0,
-	 	outputIndex: 0,
+		exchangeAddress: usdcxibAlluoUSDAddress,
+		input: USDCxAddress,
+		output: StIbAlluoUSDAddress,
+		subsidy: RICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0,
+		outputIndex: 0,
 	},
 
 	//Mumbai
@@ -312,6 +385,42 @@ export const indexIDA: IndexIDAType = [
 		outputIndex: 0,
 	},
 	{
+		exchangeAddress: DAIxOP,
+		input: optimismDAIx,
+		output: OPx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: OPxDAI,
+		input: OPx,
+		output: optimismDAIx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: opUSDCxopETH,
+		input: optimismUSDCx,
+		output: optimismETHx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: opDAIxopETH,
+		input: optimismDAIx,
+		output: optimismETHx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
 		exchangeAddress: opDAIxopUSDC,
 		input: optimismDAIx,
 		output: optimismUSDCx,
@@ -337,7 +446,7 @@ export const indexIDA: IndexIDAType = [
 		subsidyIndex: 1,
 		inputIndex: 0, // just a placeholder, not used
 		outputIndex: 0,
-	}
+	},
 ];
 
 const markets: InvestmentFlow[] = [
@@ -386,94 +495,142 @@ const markets: InvestmentFlow[] = [
 		flowKey: FlowEnum.twoWayUsdcRicFlowQuery,
 		type: FlowTypes.market,
 	},
+
 	{
-	 	superToken: usdcxibAlluoUSDAddress,
-	 	tokenA: USDCxAddress,
-	 	tokenB: StIbAlluoUSDAddress,
-	 	coinA: Coin.USDC,
-	 	coinB: Coin.IbAlluoUSD,
-	 	flowKey: FlowEnum.usdcxibAlluoUSDFlowQuery,
-	 	type: FlowTypes.market,
-	},
-	{
-		superToken: twoWayWETHMarketAddress,
+		superToken: usdcxibAlluoUSDAddress,
 		tokenA: USDCxAddress,
-		tokenB: WETHxAddress,
+		tokenB: StIbAlluoUSDAddress,
 		coinA: Coin.USDC,
-		coinB: Coin.WETH,
-		flowKey: FlowEnum.twoWayusdcWethFlowQuery,
+		coinB: Coin.IbAlluoUSD,
+		flowKey: FlowEnum.usdcxibAlluoUSDFlowQuery,
+		type: FlowTypes.market,
+	},
+
+	// V3 Markets
+	{
+		superToken: USDCxDAI,
+		tokenA: USDCxAddress,
+		tokenB: DAIxAddress,
+		coinA: Coin.USDC,
+		coinB: Coin.DAI,
+		flowKey: FlowEnum.USDCxDAI,
 		type: FlowTypes.market,
 	},
 	{
-		superToken: twoWayMarketWBTCAddress,
+		superToken: DAIxUSDC,
+		tokenA: DAIxAddress,
+		tokenB: USDCxAddress,
+		coinA: Coin.DAI,
+		coinB: Coin.USDC,
+		flowKey: FlowEnum.DAIxUSDC,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: USDCxETH,
+		tokenA: USDCxAddress,
+		tokenB: WETHxAddress,
+		coinA: Coin.USDC,
+		coinB: Coin.ETH,
+		flowKey: FlowEnum.USDCxETH,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: ETHxUSDC,
+		tokenA: WETHxAddress,
+		tokenB: USDCxAddress,
+		coinA: Coin.ETH,
+		coinB: Coin.USDC,
+		flowKey: FlowEnum.ETHxUSDC,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: ETHxDAI,
+		tokenA: WETHxAddress,
+		tokenB: DAIxAddress,
+		coinA: Coin.ETH,
+		coinB: Coin.DAI,
+		flowKey: FlowEnum.ETHxDAI,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: DAIxETH,
+		tokenA: DAIxAddress,
+		tokenB: WETHxAddress,
+		coinA: Coin.DAI,
+		coinB: Coin.ETH,
+		flowKey: FlowEnum.DAIxETH,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: USDCxWBTC,
 		tokenA: USDCxAddress,
 		tokenB: WBTCxAddress,
 		coinA: Coin.USDC,
 		coinB: Coin.WBTC,
-		flowKey: FlowEnum.twoWayusdcWbtcFlowQuery,
+		flowKey: FlowEnum.USDCxWBTC,
 		type: FlowTypes.market,
 	},
 	{
-		superToken: twoWayMarketDAIWETHAddress,
-		tokenA: DAIxAddress,
-		tokenB: WETHxAddress,
-		coinA: Coin.DAI,
-		coinB: Coin.WETH,
-		flowKey: FlowEnum.twoWayDaiWethFlowQuery,
-		type: FlowTypes.market,
-	},
-	{
-		superToken: twoWayWETHMarketAddress,
-		tokenA: WETHxAddress,
-		tokenB: USDCxAddress,
-		coinA: Coin.WETH,
-		coinB: Coin.USDC,
-		flowKey: FlowEnum.twoWaywethUsdcFlowQuery,
-		type: FlowTypes.market,
-	},
-	{
-		superToken: twoWayMarketWBTCAddress,
+		superToken: WBTCxUSDC,
 		tokenA: WBTCxAddress,
 		tokenB: USDCxAddress,
 		coinA: Coin.WBTC,
 		coinB: Coin.USDC,
-		flowKey: FlowEnum.twoWaywbtcUsdcFlowQuery,
+		flowKey: FlowEnum.WBTCxUSDC,
 		type: FlowTypes.market,
 	},
 	{
-		superToken: twoWayMarketDAIWETHAddress,
-		tokenA: WETHxAddress,
+		superToken: DAIxWBTC,
+		tokenA: DAIxAddress,
+		tokenB: WBTCxAddress,
+		coinA: Coin.DAI,
+		coinB: Coin.WBTC,
+		flowKey: FlowEnum.DAIxWBTC,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: WBTCxDAI,
+		tokenA: WBTCxAddress,
 		tokenB: DAIxAddress,
-		coinA: Coin.WETH,
+		coinA: Coin.WBTC,
 		coinB: Coin.DAI,
-		flowKey: FlowEnum.twoWayWethDaiFlowQuery,
+		flowKey: FlowEnum.WBTCxDAI,
 		type: FlowTypes.market,
 	},
 	{
-		superToken: twoWayMarketRICUSDCAddress,
-		tokenA: RICAddress,
-		tokenB: USDCxAddress,
-		coinA: Coin.RIC,
-		coinB: Coin.USDC,
-		flowKey: FlowEnum.twoWayRicUsdcFlowQuery,
-		type: FlowTypes.market,
-	},
-	{
-		superToken: twoWayMarketMATICUSDCAddress,
-		tokenA: MATICxAddress,
-		tokenB: USDCxAddress,
-		coinA: Coin.MATIC,
-		coinB: Coin.USDC,
-		flowKey: FlowEnum.twoWayMaticUsdcFlowQuery,
-		type: FlowTypes.market,
-	},
-	{
-		superToken: twoWayMarketMATICUSDCAddress,
+		superToken: USDCxMATIC,
 		tokenA: USDCxAddress,
 		tokenB: MATICxAddress,
 		coinA: Coin.USDC,
 		coinB: Coin.MATIC,
-		flowKey: FlowEnum.twoWayUsdcMaticFlowQuery,
+		flowKey: FlowEnum.USDCxMATIC,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: MATICxUSDC,
+		tokenA: MATICxAddress,
+		tokenB: USDCxAddress,
+		coinA: Coin.MATIC,
+		coinB: Coin.USDC,
+		flowKey: FlowEnum.MATICxUSDC,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: DAIxMATIC,
+		tokenA: DAIxAddress,
+		tokenB: MATICxAddress,
+		coinA: Coin.DAI,
+		coinB: Coin.MATIC,
+		flowKey: FlowEnum.DAIxMATIC,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: MATICxDAI,
+		tokenA: MATICxAddress,
+		tokenB: DAIxAddress,
+		coinA: Coin.MATIC,
+		coinB: Coin.DAI,
+		flowKey: FlowEnum.MATICxDAI,
 		type: FlowTypes.market,
 	},
 ];
@@ -543,7 +700,7 @@ export const mumbaiIndexIDA: IndexIDAType = [
 		inputIndex: 1,
 		outputIndex: 0,
 	},
-]
+];
 
 export const mumbaiMarkets: InvestmentFlow[] = [
 	{
@@ -564,7 +721,7 @@ export const mumbaiMarkets: InvestmentFlow[] = [
 		flowKey: FlowEnum.fUSDCxfDAI,
 		type: FlowTypes.market,
 	},
-]
+];
 
 export const mumbaiLaunchpads: InvestmentFlow[] = [
 	{
@@ -576,7 +733,7 @@ export const mumbaiLaunchpads: InvestmentFlow[] = [
 		flowKey: FlowEnum.usdcRicFlowQuery,
 		type: FlowTypes.launchpad,
 	},
-]
+];
 
 export const optimismLaunchpads: InvestmentFlow[] = [
 	{
@@ -588,7 +745,7 @@ export const optimismLaunchpads: InvestmentFlow[] = [
 		flowKey: FlowEnum.usdcRicFlowQuery,
 		type: FlowTypes.launchpad,
 	},
-]
+];
 
 export const optimismMarkets: InvestmentFlow[] = [
 	{
@@ -627,9 +784,45 @@ export const optimismMarkets: InvestmentFlow[] = [
 		flowKey: FlowEnum.USDCxOP,
 		type: FlowTypes.market,
 	},
-]
+	{
+		superToken: DAIxOP,
+		tokenA: optimismDAIx,
+		tokenB: OPx,
+		coinA: Coin.OPDAI,
+		coinB: Coin.OP,
+		flowKey: FlowEnum.DAIxOP,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: OPxDAI,
+		tokenA: OPx,
+		tokenB: optimismDAIx,
+		coinA: Coin.OP,
+		coinB: Coin.OPDAI,
+		flowKey: FlowEnum.OPxDAI,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: opUSDCxopETH,
+		tokenA: optimismUSDCx,
+		tokenB: optimismETHx,
+		coinA: Coin.USDC,
+		coinB: Coin.ETH,
+		flowKey: FlowEnum.opUSDCxopETH,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: opDAIxopETH,
+		tokenA: optimismDAIx,
+		tokenB: optimismETHx,
+		coinA: Coin.DAI,
+		coinB: Coin.ETH,
+		flowKey: FlowEnum.opDAIxopETH,
+		type: FlowTypes.market,
+	},
+];
 
-export const optimismFlowConfig: InvestmentFlow[] = [...optimismMarkets, ...optimismLaunchpads]
+export const optimismFlowConfig: InvestmentFlow[] = [...optimismMarkets, ...optimismLaunchpads];
 
 export const mumbaiFlowConfig: InvestmentFlow[] = [...mumbaiMarkets, ...mumbaiLaunchpads];
 
@@ -639,8 +832,8 @@ export const flowDirectory: { [key: number]: InvestmentFlow[] } = {
 	10: optimismFlowConfig,
 	137: flowConfig,
 	80001: mumbaiFlowConfig,
-}
+};
 
 export const getFlowDirectory = (networkId: number) => {
 	return flowDirectory[networkId];
-}
+};

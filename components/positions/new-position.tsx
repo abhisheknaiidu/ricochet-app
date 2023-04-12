@@ -5,7 +5,7 @@ import { getCoingeckoPairs } from '@richochet/utils/getCoingeckoPairs';
 import { getShareScaler } from '@richochet/utils/getShareScaler';
 import Big from 'big.js';
 import { Coin } from 'constants/coins';
-import { flowConfig, FlowTypes, InvestmentFlow, getFlowDirectory } from 'constants/flowConfig';
+import { FlowTypes, InvestmentFlow, getFlowDirectory } from 'constants/flowConfig';
 import { AlertContext } from 'contexts/AlertContext';
 import { ExchangeKeys } from 'enumerations/exchangeKeys.enum';
 import { NextPage } from 'next';
@@ -47,7 +47,14 @@ export const NewPosition: NextPage<Props> = ({ close, setClose }) => {
 
 	useEffect(() => {
 		if (!position) return;
-		const exchangeKey = position?.flowKey?.replace('FlowQuery', '') as ExchangeKeys;
+		// let exchangeKey = null;
+		// if (chain?.id === 137) {
+		const exchangeKey = position?.flowKey.includes('FlowQuery')
+			? (position?.flowKey?.replace('FlowQuery', '') as ExchangeKeys)
+			: Object(ExchangeKeys)[position?.flowKey];
+		// } else if (chain?.id === 10) {
+		// 	exchangeKey = Object(OPExchangeKeys)[position?.flowKey];
+		// }
 		const fetchShareScaler = async (exchangeKey: ExchangeKeys, tokenA: string, tokenB: string, chain: number) => {
 			const shareScaler = await getShareScaler(exchangeKey, tokenA, tokenB, chain).then((res) => res);
 			setShareScaler(shareScaler);
