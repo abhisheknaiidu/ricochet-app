@@ -9,7 +9,7 @@ import { Coin } from 'constants/coins';
 import { FlowTypes, InvestmentFlow } from 'constants/flowConfig';
 import { upgradeTokensList } from 'constants/upgradeConfig';
 import { AlertContext } from 'contexts/AlertContext';
-import { ExchangeKeys } from 'enumerations/exchangeKeys.enum';
+import { ExchangeKeys, OPExchangeKeys } from 'enumerations/exchangeKeys.enum';
 import { ethers } from 'ethers';
 import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -63,7 +63,14 @@ export const EditPosition: NextPage<Props> = ({ setClose, position }) => {
 
 	useEffect(() => {
 		if (!position) return;
-		const exchangeKey = position?.flowKey?.replace('FlowQuery', '') as ExchangeKeys;
+		// let exchangeKey = null;
+		// if (chain?.id === 137) {
+		const exchangeKey = position?.flowKey.includes('FlowQuery')
+			? (position?.flowKey?.replace('FlowQuery', '') as ExchangeKeys)
+			: Object(ExchangeKeys)[position?.flowKey];
+		// } else if (chain?.id === 10) {
+		// 	exchangeKey = Object(OPExchangeKeys)[position?.flowKey];
+		// }
 		const fetchShareScaler = async (exchangeKey: ExchangeKeys, tokenA: string, tokenB: string) => {
 			const shareScaler = await getShareScaler(exchangeKey, tokenA, tokenB, chain?.id!).then((res) => res);
 			setShareScaler(shareScaler);
