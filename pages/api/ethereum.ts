@@ -3,15 +3,7 @@ import { TransactionReceipt } from '@ethersproject/providers';
 import { getSFFramework } from '@richochet/utils/fluidsdkConfig';
 import { Framework } from '@superfluid-finance/sdk-core';
 import Operation from '@superfluid-finance/sdk-core/dist/main/Operation';
-import {
-	fetchSigner,
-	getAccount,
-	getProvider,
-	prepareWriteContract,
-	readContract,
-	writeContract,
-	getNetwork,
-} from '@wagmi/core';
+import { fetchSigner, getAccount, getProvider, prepareWriteContract, readContract, writeContract, getNetwork } from '@wagmi/core';
 import { erc20ABI } from 'constants/ABIs/ERC20';
 import { superTokenABI } from 'constants/ABIs/supertoken';
 import { indexIDA, optimismLaunchpads } from 'constants/flowConfig';
@@ -21,7 +13,7 @@ import {
 	RICAddress,
 	ricRexHatLaunchpadAddress,
 	ricRexShirtLaunchpadAddress,
-	usdcxRicExchangeAddress,
+	usdcxRicExchangeAddress
 } from 'constants/polygon_config';
 import { optimismLaunchpad } from 'constants/optimism_config';
 import { BigNumber, ethers } from 'ethers';
@@ -148,7 +140,7 @@ export const startFlow = async (
 	inputTokenAddress: string,
 	outputTokenAddress: string,
 	amount: BigNumber,
-	referralId?: string
+	referralId?: string,
 ) => {
 	try {
 		const { address } = await getAccount();
@@ -325,7 +317,7 @@ export const startFlow = async (
 							},
 						}),
 					];
-					await executeBatchOperations(operations, framework, signer as Signer);
+						await executeBatchOperations(operations, framework, signer as Signer);
 				} catch (e: any) {
 					console.error(e);
 					throw new Error(e);
