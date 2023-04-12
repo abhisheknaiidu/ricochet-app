@@ -79,30 +79,42 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 	useEffect(() => {
 		if (!chain) return;
 		if (chain.id === 137) {
-			const downgradeTokenArr = downgradeTokensList.map((coin) => {return coin.coin})
-			const upgradeTokenArr = upgradeTokensList.map((coin) => {return coin.coin})
+			const downgradeTokenArr = downgradeTokensList.map((coin) => {
+				return coin.coin;
+			});
+			const upgradeTokenArr = upgradeTokensList.map((coin) => {
+				return coin.coin;
+			});
 			setDowngradeTokens(downgradeTokenArr);
 			setUpgradeTokens(upgradeTokenArr);
 			setUpgradeTokenList(upgradeTokensList);
 			setDowngradeTokenList(downgradeTokensList);
-		} 
+		}
 		if (chain.id === 80001) {
-			const downgradeTokenArr = mumbaiDowngradeList.map((coin) => {return coin.coin})
-			const upgradeTokenArr = mumbaiUpgradeTokensList.map((coin) => {return coin.coin})
+			const downgradeTokenArr = mumbaiDowngradeList.map((coin) => {
+				return coin.coin;
+			});
+			const upgradeTokenArr = mumbaiUpgradeTokensList.map((coin) => {
+				return coin.coin;
+			});
 			setDowngradeTokens(downgradeTokenArr);
 			setUpgradeTokens(upgradeTokenArr);
 			setUpgradeTokenList(mumbaiUpgradeTokensList);
 			setDowngradeTokenList(mumbaiDowngradeList);
 		}
 		if (chain.id === 10) {
-			const downgradeTokenArr = optimismDowngradeList.map((coin) => {return coin.coin})
-			const upgradeTokenArr = optimismUpgradeTokensList.map((coin) => {return coin.coin})
+			const downgradeTokenArr = optimismDowngradeList.map((coin) => {
+				return coin.coin;
+			});
+			const upgradeTokenArr = optimismUpgradeTokensList.map((coin) => {
+				return coin.coin;
+			});
 			setDowngradeTokens(downgradeTokenArr);
 			setUpgradeTokens(upgradeTokenArr);
 			setUpgradeTokenList(optimismUpgradeTokensList);
 			setDowngradeTokenList(optimismDowngradeList);
 		}
-	}, [chain])
+	}, [chain]);
 
 	useEffect(() => {
 		if (type === BalanceAction.Withdraw && selectedToken !== Coin.SELECT) {
@@ -169,7 +181,10 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 					}
 					const bigNumberAmount = ethers.utils.parseEther(amount);
 					setIsLoading(true);
-					const downgrade = downgradeTrigger({ value: bigNumberAmount.toString(), tokenAddress: downgradeConfig?.tokenAddress! });
+					const downgrade = downgradeTrigger({
+						value: bigNumberAmount.toString(),
+						tokenAddress: downgradeConfig?.tokenAddress!,
+					});
 					downgrade
 						.then((response) => {
 							if (response.isSuccess) {
@@ -196,7 +211,10 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 					if (hasApprove) {
 						const bigNumberAmount = ethers.utils.parseEther(amount);
 						setIsLoading(true);
-						const upgrade = upgradeTrigger({ value: bigNumberAmount.toString(), tokenAddress: upgradeConfig?.superTokenAddress! });
+						const upgrade = upgradeTrigger({
+							value: bigNumberAmount.toString(),
+							tokenAddress: upgradeConfig?.superTokenAddress!,
+						});
 						upgrade
 							.then((response: any) => {
 								if (response.isSuccess) {
@@ -283,7 +301,6 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 						onClick={setMaxValue}>
 						Max
 					</button>
-					
 				</div>
 				{/* {!hasApprove && type === BalanceAction.Deposit && (
 						<div style={{display:'flex', alignItems: 'center'}}>
