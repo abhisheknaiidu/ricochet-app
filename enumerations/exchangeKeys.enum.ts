@@ -17,6 +17,8 @@ export enum ExchangeKeys {
 	'USDC_WETH' = 'twoWayusdcWeth',
 	'WBTC_USDC' = 'twoWaywbtcUsdc',
 	'WETH_USDC' = 'twoWaywethUsdc',
+	'DAI_WETH' = 'twoWayDaiWeth',
+	'WETH_DAI' = 'twoWayWethDai',
 	'TWO_WAY_USDC_RIC' = 'twoWayUsdcRic',
 	'TWO_WAY_RIC_USDC' = 'twoWayRicUsdc',
 	'TWO_WAY_MATIC_USDC' = 'twoWayMaticUsdc',
@@ -42,6 +44,10 @@ export enum ExchangeKeys {
 	'IDA' = 'ida',
 	'RICapp' = 'ricApp',
 	'RIC' = 'ric',
+	'fUSDCxfDAI' = 'fUSDCxfDAI',
+	'fDAIxfUSDC' = 'fDAIxfUSDC',
+	'ricRexShirt' = 'ricRexShirt',
+	'ricRexHat' = 'ricRexHat',
 	'StIbAlluoUSD' = 'stiballuousd',
 	'StIbAlluoETH' = 'stiballuoeth',
 	'StIbAlluoBTC' = 'stiballuobtc',
@@ -49,4 +55,17 @@ export enum ExchangeKeys {
 	'IbAlluoETH' = 'iballuoeth',
 	'IbAlluoBTC' = 'iballuobtc',
 	'Referral' = 'referral',
+}
+
+export enum OPExchangeKeys {
+	'optimismLaunchpad' = 'optimismLaunchpad',
+	'optimismReferral' = 'optimismReferral',
+	'opUSDCxopDAI' = 'opusdcxopdai',
+	'opDAIxopUSDC' = 'opdaixopusdc',
+	'OPxUSDC' = 'opxusdc',
+	'USDCxOP' = 'usdcxop',
+	'DAIxOP' = 'daixop',
+	'OPxDAI' = 'opxdai',
+	'opUSDCxopETH' = 'opusdcxopeth',
+	'opDAIxopETH' = 'opdaixopeth',
 }
