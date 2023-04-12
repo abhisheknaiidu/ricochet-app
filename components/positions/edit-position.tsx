@@ -63,9 +63,7 @@ export const EditPosition: NextPage<Props> = ({ setClose, position }) => {
 
 	useEffect(() => {
 		if (!position) return;
-		const exchangeKey = position?.flowKey.includes('FlowQuery')
-			? (position?.flowKey?.replace('FlowQuery', '') as ExchangeKeys)
-			: Object(ExchangeKeys)[position?.flowKey];
+		const exchangeKey = position?.flowKey?.replace('FlowQuery', '') as ExchangeKeys;
 		const fetchShareScaler = async (exchangeKey: ExchangeKeys, tokenA: string, tokenB: string) => {
 			const shareScaler = await getShareScaler(exchangeKey, tokenA, tokenB, chain?.id!).then((res) => res);
 			setShareScaler(shareScaler);
