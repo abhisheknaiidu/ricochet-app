@@ -9,6 +9,7 @@ import { CoinChange, DataType } from '../coins/coin-change';
 import { MarketData } from '../markets';
 import { PositionData } from '../positions';
 import { TableLoader } from './table-loader';
+import { MarketRow } from './market-row';
 
 interface Props {
 	headers: string[];
@@ -85,24 +86,8 @@ export const DataTable: NextPage<Props> = ({
 											</td>
 										</>
 									) : isMarketData(data) ? (
-										<>
-											<td className='px-2 py-4 whitespace-nowrap'>
-												<div className='inline-flex items-center gap-2'>
-													<CoinChange coinA={data.coinA} coinB={data.coinB} type={DataType.Market} />
-												</div>
-											</td>
-											<td className='px-6 py-4 whitespace-nowrap'>{data.feePercent}</td>
-											<td className='px-6 py-4 whitespace-nowrap'>
-												<p>{formatCurrency(parseFloat(data.usdValue))}</p>
-												<p className='text-slate-400'>
-													{data.total} <span className='text-sm'>{data.coinA}x</span>
-												</p>
-											</td>
-											<td className='px-6 py-4 whitespace-nowrap'>
-												{data.streams}
-												{/* {t('streams')} */}
-											</td>
-										</>
+										//@ts-ignore
+										<MarketRow data={data}/>
 									) : isTokenData(data) ? (
 										<>
 											<td className='flex items-center px-2 py-4 whitespace-nowrap space-x-2'>
