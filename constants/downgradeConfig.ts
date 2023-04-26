@@ -11,7 +11,7 @@ import {
 } from './polygon_config';
 
 import { fUSDCx, fDAIx } from './mumbai_config';
-import { optimismDAIx, optimismUSDCx, OPx, optimismETHx } from './optimism_config';
+import { optimismDAIx, optimismUSDCx, OPx, optimismETHx, opBTCx, wstETHx, optimismETH } from './optimism_config';
 
 export const downgradeTokensList = [
 	{
@@ -72,8 +72,20 @@ export const optimismDowngradeList = [
 		coin: Coin.OPx,
 		tokenAddress: OPx,
 	},
-	// {
-	// 	coin: Coin.ETHx,
-	// 	tokenAddress: optimismETHx,
-	// },
+	{
+		coin: Coin.ETHx,
+		tokenAddress: optimismETHx,
+	},
+	{
+		coin: Coin.WBTCx,
+		tokenAddress: opBTCx
+	},
+	{
+		coin: Coin.WSTETHx,
+		tokenAddress: wstETHx,
+	},
+	{
+		coin: Coin.OPETHx,
+		tokenAddress: optimismETHx,
+	}
 ];

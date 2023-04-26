@@ -18,6 +18,8 @@ import op from '@richochet/assets/images/coins/op.svg';
 
 export enum Coin {
 	SELECT = 'Select Coin',
+	WSTETHx = 'WSTETHx',
+	WSTETH = 'WSTETH',
 	WBTC = 'WBTC',
 	IDLE = 'IDLE',
 	BTC = 'BTC',
@@ -60,13 +62,19 @@ export enum Coin {
 	OPDAIx = 'DAIx',
 	OP = 'OP',
 	OPx = 'OPx',
+	OPBTCx = 'WBTCx',
+	OPBTC = 'WBTC',
+	OPETH = 'ETH',
+	OPETHx = 'ETHx',
 	// REXSHIRT = 'REXSHIRT',
 	// REXHAT = 'REXHAT',
 }
 
 export const namesCoin = [
+	Coin.WSTETH,
 	Coin.OP,
 	Coin.OPUSDC,
+	Coin.OPBTC,
 	Coin.DAI,
 	Coin.USDC,
 	Coin.DAI,
@@ -83,11 +91,13 @@ export const namesCoin = [
 	Coin.IbAlluoBTC,
 	Coin.FDAI,
 	Coin.FUSDC,
+	Coin.OPETH,
 ];
 
 export const namesCoinX = [
 	Coin.OPx,
 	Coin.DAIx,
+	Coin.OPBTCx,
 	Coin.MKRx,
 	Coin.USDCx,
 	Coin.WBTCx,
@@ -103,15 +113,21 @@ export const namesCoinX = [
 	Coin.FUSDCx,
 	Coin.OPUSDCx,
 	Coin.DAIx,
+	Coin.WSTETHx,
+	Coin.OPETHx
 ];
 
 export const iconsCoin: Partial<Record<Coin, string>> = {
+	[Coin.WSTETH]: eth,
+	[Coin.WSTETHx]: eth,
 	[Coin.OP]: op,
 	[Coin.OPx]: op,
 	[Coin.OPUSDC]: usdc,
 	[Coin.OPDAI]: dai,
 	[Coin.OPDAIx]: dai,
 	[Coin.OPUSDCx]: usdc,
+  [Coin.OPBTC]: wbtc,
+	[Coin.OPBTCx]: wbtc,
 	[Coin.USDC]: usdc,
 	[Coin.WBTC]: wbtc,
 	[Coin.ETH]: eth,
@@ -148,4 +164,6 @@ export const iconsCoin: Partial<Record<Coin, string>> = {
 	[Coin.StIbAlluoUSD]: iballuousd,
 	[Coin.IbAlluoBTC]: iballuobtc,
 	[Coin.StIbAlluoBTC]: iballuobtc,
+	[Coin.OPETH]: eth,
+	[Coin.OPETHx]: eth,
 };

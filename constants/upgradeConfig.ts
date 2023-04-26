@@ -31,6 +31,10 @@ import {
 	OPx,
 	optimismETHx,
 	optimismETH,
+	opBTC,
+	opBTCx,
+	wstETH,
+	wstETHx,
 } from './optimism_config';
 
 export const upgradeTokensList: {
@@ -141,7 +145,7 @@ export const optimismUpgradeTokensList: {
 	tokenAddress: string;
 	superTokenAddress: string;
 	multi: number;
-	key: 'hasOpUsdcApprove' | 'hasOpDaiApprove' | 'hasOpEthApprove' | 'hasOPApprove';
+	key: 'hasOpUsdcApprove' | 'hasOpDaiApprove' | 'hasOpEthApprove' | 'hasOPApprove' | 'hasBTCApprove' | 'hasWSTETHApprove';
 }[] = [
 	{
 		coin: Coin.OPUSDC,
@@ -164,11 +168,25 @@ export const optimismUpgradeTokensList: {
 		multi: 1e18,
 		key: 'hasOPApprove',
 	},
-	// {
-	// 	coin: Coin.ETH,
-	// 	tokenAddress: optimismETH,
-	// 	superTokenAddress: optimismETHx,
-	// 	multi: 1e18,
-	// 	key: 'hasOpEthApprove',
-	// },
+	{
+		coin: Coin.WBTC,
+		tokenAddress: opBTC,
+		superTokenAddress: opBTCx,
+		multi: 1e8,
+		key: 'hasBTCApprove'
+	},
+	{
+		coin: Coin.WSTETH,
+		tokenAddress: wstETH,
+		superTokenAddress: wstETHx,
+		multi: 1e18,
+		key: 'hasWSTETHApprove'
+	},
+	{
+	 	coin: Coin.OPETH,
+	 	tokenAddress: optimismETH,
+		superTokenAddress: optimismETHx,
+		multi: 1e18,
+		key: 'hasOpEthApprove',
+	},
 ];
