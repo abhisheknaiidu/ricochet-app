@@ -4,6 +4,7 @@ import { formatCurrency } from '@richochet/utils/helperFunctions'
 import { MarketData } from '../markets'
 import { getPoolFees, notAllowedMarkets } from '@richochet/utils/getPoolFees';
 import { ethers } from 'ethers';
+import { useNetwork } from 'wagmi';
 
 interface Props {
 	coinA: string;
@@ -15,18 +16,18 @@ interface Props {
 }
 
 export const MarketRow: FC<MarketData> = (data: any) => {
+  const { chain } = useNetwork();
   const [feePercent, setFeePercent] = useState('');
   const [market, setMarket] = useState<MarketData>();
   useEffect(() => {
     setMarket(data.data)
-
     const getFee = async () => {
-      if (notAllowedMarkets.includes(data.data.superToken)) {
+      if (notAllowedMarkets.includes(data.data.superToken) || !chain?.id) {
         setFeePercent('0.5%')
         return;
       } 
-      const fee: any = await getPoolFees(data.data)
-      setFeePercent(`${+ethers.utils.formatEther(fee?.feeRate) * 10 ** 18 / 10000}%`);
+      const fee: any = await getPoolFees(data.data, chain?.id)
+      setFeePercent(`${+ethers.utils.formatEther(fee?.feeRate || 5000) * 10 ** 18 / 10000}%`);
     }
 
     getFee()

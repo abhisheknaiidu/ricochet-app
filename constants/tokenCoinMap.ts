@@ -25,7 +25,7 @@ import {
 	fDAIx,
 } from './mumbai_config';
 
-import { OPToken, optimismDAI, optimismDAIx, optimismUSDC, optimismUSDCx, OPx } from './optimism_config';
+import { OPToken, optimismDAI, optimismDAIx, optimismUSDC, optimismUSDCx, OPx, opBTCx, wstETHx } from './optimism_config';
 
 type Transformer = {
 	token: string;
@@ -137,4 +137,12 @@ export const tokenCoinTransformer: Transformer[] = [
 		token: optimismDAIx,
 		coin: Coin.OPDAIx,
 	},
+	{
+		token: opBTCx,
+		coin: Coin.OPBTCx,
+	},
+	{
+		token: wstETHx,
+		coin: Coin.WSTETHx,
+	}
 ];

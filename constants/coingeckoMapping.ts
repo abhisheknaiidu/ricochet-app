@@ -14,5 +14,7 @@ export const geckoMapping: Record<string, string> = {
 	StIbAlluoUSD: 'usd-coin',
 	FUSDC: 'usd-coin',
 	FDAI: 'dai',
-	OP: 'optimism'
+	OP: 'optimism',
+	WSTETH: 'ethereum',
+	OPETH: 'ethereum'
 };

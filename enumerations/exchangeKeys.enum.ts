@@ -68,4 +68,9 @@ export enum OPExchangeKeys {
 	'OPxDAI' = 'opxdai',
 	'opUSDCxopETH' = 'opusdcxopeth',
 	'opDAIxopETH' = 'opdaixopeth',
+	'opusdcxopbtc' = 'opUSDCxopWBTC',
+	'opbtcxopusdc' = 'opWBTCxopUSDC',
+	'opdaixopbtc' = 'opDAIxopWBTC',
+	'opwbtcxopdai' = 'opWBTCxopDAI',
+	'opusdcxwsteth' = 'opUSDCxwstETH',
 }

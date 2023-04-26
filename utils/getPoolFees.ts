@@ -8,17 +8,16 @@ export const notAllowedMarkets = [
   '0xE53dd10d49C8072d68d48c163d9e1A219bd6852D', //usdcxIballuo
 ]
 
-export const getPoolFees = async (market: any) => {
+export const getPoolFees = async (market: any, network: number) => {
   if (market.flowKey.includes('IbAlluo')) return;
   try {
     return await readContract({
       address: market.superToken as `0x${string}`,
       abi: Exchange,
       functionName: 'outputPools',
-      args: [0],
+      args: [network === 137 ? 0 : 1],
     })
   } catch (e) {
-    console.log('error', e)
-    return 
+    return 5000
   }
 }
