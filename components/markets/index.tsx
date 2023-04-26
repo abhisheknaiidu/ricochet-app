@@ -4,6 +4,8 @@ import { InvestmentFlow } from 'constants/flowConfig';
 import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
 import { useNetwork } from 'wagmi';
+import { getPoolFees } from '@richochet/utils/getPoolFees';
+import { ethers } from 'ethers';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { CardTitle } from '../cards/card-title';
 import { DataTable } from '../table/data-table';
@@ -42,20 +44,25 @@ export const Markets: NextPage<Props> = ({ coingeckoPrices, sortedList, queries 
 	const { chain } = useNetwork();
 
 	useEffect(() => {
-		if (sortedList.length > 0 && queries.size > 0) {
-			const marketData: MarketData[] = [];
-			sortedList.map((item) =>
-				marketData.push({
-					...item,
-					total: parseFloat(queries.get(item.flowKey)?.flowsOwned!) || 0,
-					usdValue: getFlowUSDValue(item, queries, coingeckoPrices),
-					feePercent: item.coinA.includes('IbAlluo') ? '0.5%' : '2%',
-					streams: queries.get(item.flowKey)?.totalFlows || 0,
-				})
-			);
-			const sortedData = marketData.sort((a, b) => b.total - a.total);
-			setMarketList(sortedData);
+		const getMarketData = async () => {
+			if (sortedList.length > 0 && queries.size > 0) {
+				const marketData: MarketData[] = [];
+				sortedList.map(async (item) => {
+					marketData.push({
+						...item,
+						total: parseFloat(queries.get(item.flowKey)?.flowsOwned!) || 0,
+						usdValue: getFlowUSDValue(item, queries, coingeckoPrices),
+						feePercent: '0.5%',
+						streams: queries.get(item.flowKey)?.totalFlows || 0,
+					})
+					const sortedData = marketData.sort((a, b) => b.total - a.total);
+					setMarketList(sortedData);
+				}
+				)
+			}
 		}
+		
+		getMarketData()
 	}, [queries, coingeckoPrices, sortedList]);
 
 	const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +72,7 @@ export const Markets: NextPage<Props> = ({ coingeckoPrices, sortedList, queries 
 			(el) =>
 				el.coinA.toUpperCase().includes(value.toUpperCase()) || el.coinB.toUpperCase().includes(value.toUpperCase())
 		);
+		setFilteredList(filtered);
 	};
 
 	return (
