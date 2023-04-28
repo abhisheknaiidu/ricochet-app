@@ -97,6 +97,7 @@ export const NewPosition: NextPage<Props> = ({ close, setClose }) => {
 
 	useEffect(() => {
 		if (position) {
+			console.log(position)
 			const pairs = getCoingeckoPairs([position]);
 			setCoingeckoPairs(pairs);
 		}
