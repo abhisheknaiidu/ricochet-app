@@ -173,6 +173,15 @@ export const startFlow = async (
 			providerOrSigner: provider,
 		});
 		if (web3Subscription.approved && exchangeAddress !== usdcxRicExchangeAddress) {
+			console.log({
+				superToken: inputTokenAddress,
+					sender: address!,
+					receiver: exchangeAddress,
+					flowRate: amount.toString(),
+					overrides: {
+						...(await gas()),
+					},
+			}, 'testing')
 			try {
 				const transactionData = {
 					superToken: inputTokenAddress,
@@ -203,7 +212,7 @@ export const startFlow = async (
 			) {
 				try {
 					const operations = [
-						/* 		await framework.idaV1.approveSubscription({
+								await framework.idaV1.approveSubscription({
 							superToken: outputTokenAddress,
 							indexId: '0',
 							publisher: exchangeAddress,
@@ -211,7 +220,7 @@ export const startFlow = async (
 							overrides: {
 								...(await gas()),
 							}
-						}), */
+						}),
 						await framework.cfaV1.createFlow({
 							superToken: inputTokenAddress,
 							sender: address!,

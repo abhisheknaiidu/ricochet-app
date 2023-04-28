@@ -4,17 +4,18 @@ import { useCoingeckoPrices } from '@richochet/hooks/useCoingeckoPrices';
 import { useTokenHistory } from '@richochet/hooks/useTokenHistory';
 import { getPersonalFlowUSDValue } from '@richochet/utils/getFlowUsdValue';
 import { getPriceRange } from '@richochet/utils/getPriceRange';
-import { polygon } from '@wagmi/chains';
 import { fetchBalance } from '@wagmi/core';
 import { geckoMapping } from 'constants/coingeckoMapping';
 import { Coin } from 'constants/coins';
 import { flowConfig, FlowEnum, InvestmentFlow } from 'constants/flowConfig';
 import { tokenArray } from 'constants/polygon_config';
+import { optimismTokenArray } from 'constants/optimism_config';
+import { mumbaiTokenArray } from 'constants/mumbai_config';
 import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import sushiswapSubgraphApi from 'redux/slices/sushiswapSubgraph.slice';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { RoundedButton } from '../button';
 import { CardTitle } from '../cards';
 import { DataTable } from '../table';
@@ -65,7 +66,9 @@ export const Positions: NextPage<Props> = ({ positions, queries }) => {
 	const [selectedPosition, setSelectedPosition] = useState<PositionData>();
 	const [closePosition, setClosePosition] = useState(true);
 	const { address, isConnected } = useAccount();
+	const { chain } = useNetwork();
 	const [querySushiPoolPrices] = sushiswapSubgraphApi.useQuerySushiPoolPricesMutation();
+	const [tokens, setTokens] = useState<any[]>();
 	const sumStrings = (a: number, b: string): number => {
 		return a + parseFloat(b);
 	};
@@ -101,6 +104,18 @@ export const Positions: NextPage<Props> = ({ positions, queries }) => {
 	};
 
 	useEffect(() => {
+		if (chain?.id === 137) {
+			setTokens(tokenArray)
+		} 
+		if (chain?.id === 10) {
+			setTokens(optimismTokenArray)
+		} 
+		if (chain?.id === 80001) {
+			setTokens(mumbaiTokenArray)
+		} 
+	}, [chain?.id])
+
+	useEffect(() => {
 		if (history.size > 0 && coingeckoPairs.size > 0) {
 			const minMaxArr = [];
 			for (const [key, value] of coingeckoPairs) {
@@ -131,11 +146,13 @@ export const Positions: NextPage<Props> = ({ positions, queries }) => {
 			}
 		}
 	}, [history, coingeckoPairs]);
+
 	useEffect(() => {
-		const currBalances = tokenArray.map(async (token) => {
+		if (!tokens) return;
+		const currBalances = tokens.map(async (token) => {
 			const balance = await fetchBalance({
 				address: address!,
-				chainId: polygon.id,
+				chainId: chain?.id || 137,
 				token: token as `0x${string}`,
 			}).then((res) => res?.formatted);
 			return { token, balance };
@@ -145,7 +162,7 @@ export const Positions: NextPage<Props> = ({ positions, queries }) => {
 			res.map((r) => balanceMap.set(r?.token, r?.balance));
 			setBalances(balanceMap);
 		});
-	}, [address, isConnected]);
+	}, [address, isConnected, tokens]);
 
 	useEffect(() => {
 		if (address && isConnected && queries.size > 0 && positions.length > 0) {
