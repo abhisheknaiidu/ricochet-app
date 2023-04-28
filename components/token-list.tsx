@@ -11,9 +11,11 @@ interface Props {
 	value: Coin;
 	classNames?: string;
 	handleChange?: Dispatch<SetStateAction<Coin>>;
+	balanceList: any;
 }
 
-const TokenList: NextPage<Props> = ({ classNames, value, coins, handleChange }): JSX.Element => (
+const TokenList: NextPage<Props> = ({ classNames, value, coins, balanceList, handleChange }): JSX.Element => (
+	
 	<Listbox value={value} onChange={handleChange}>
 		<div className={combineClasses(classNames ? classNames : 'relative w-full z-10')}>
 			<Listbox.Button className='relative w-full cursor-default rounded-lg bg-slate-700 py-2 pl-3 pr-10 text-left text-slate-200 shadow-md focus:outline-none focus-visible:border-slate-500 focus-visible:ring-2 focus-visible:ring-slate-100 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-300 sm:text-sm'>
@@ -55,7 +57,9 @@ const TokenList: NextPage<Props> = ({ classNames, value, coins, handleChange }):
 											<CheckIcon className='h-5 w-5' aria-hidden='true' />
 										</span>
 									) : null}
-
+										<span>
+											{`${balanceList[index]} ${coin}`|| '0'} 
+										</span>
 									{selected ? (
 										<span className='absolute inset-y-0 left-0 flex items-center pl-3 text-green-600'>
 											<CheckIcon className='h-5 w-5' aria-hidden='true' />
