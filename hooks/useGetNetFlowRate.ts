@@ -16,9 +16,10 @@ export const useGetNewFlowRate = (positions: InvestmentFlow[], usdPrice: Big) =>
 			(async () => {
 				const { flowRate, loading } = await getNetFlowRate(usdPrice, chain, positions, address!, provider);
 				setUsdFlowRate(flowRate);
-				setUsdFlowRateLoading(loading);
+				setUsdFlowRateLoading(!loading);
 			})();
 		}
+		setUsdFlowRateLoading(false);
 	}, [isConnected, positions, usdPrice]);
 
 	return { usdFlowRate, usdFlowRateLoading };

@@ -110,9 +110,9 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 			setDowngradeConfig(token);
 		} else if (type === BalanceAction.Deposit && selectedToken !== Coin.SELECT) {
 			const upgradeConfig = upgradeTokenList?.find((token) => token.coin === selectedToken);
-			checkForApproval(upgradeConfig?.tokenAddress!, upgradeConfig?.superTokenAddress!).then((hasApprove) =>
-				setHasApprove(hasApprove)
-			);
+			checkForApproval(upgradeConfig?.tokenAddress!, upgradeConfig?.superTokenAddress!).then((hasApprove) => {
+				setHasApprove(false)
+			});
 			setUpgradeConfig(upgradeConfig);
 		}
 	}, [selectedToken]);

@@ -57,6 +57,13 @@ import {
 	optimismETHx,
 	opUSDCxopETH,
 	opDAIxopETH,
+	opUSDCxopWBTC,
+	opBTCx,
+	opDAIxopWBTC,
+	opWBTCxopUSDC,
+	opWBTCxopDAI,
+	opUSDCxwstETH,
+	wstETHx,
 } from './optimism_config';
 
 // To-Do: Refactor this
@@ -104,6 +111,11 @@ export enum FlowEnum {
 	MATICxUSDC = 'MATICxUSDC',
 	DAIxMATIC = 'DAIxMATIC',
 	MATICxDAI = 'MATICxDAI',
+	OPUSDCxOPBTC = 'OPUSDCxOPBTC',
+	OPDAIxOPBTC = 'OPDAIxOPBTC',
+	OPBTCxOPUSDC = 'OPBTCxOPUSDC',
+	OPBTCxOPDAI = 'OPBTCxOPDAI',
+	OPUSDCxWSTETH = 'OPUSDCxWSTETH'
 }
 
 type IndexIDAType = {
@@ -447,6 +459,55 @@ export const indexIDA: IndexIDAType = [
 		inputIndex: 0, // just a placeholder, not used
 		outputIndex: 0,
 	},
+
+	{
+		exchangeAddress: opUSDCxopWBTC,
+		input: optimismUSDCx,
+		output: opBTCx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: opDAIxopWBTC,
+		input: optimismDAIx,
+		output: opBTCx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+
+	{
+		exchangeAddress: opWBTCxopUSDC,
+		input: opBTCx,
+		output: optimismUSDCx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+	{
+		exchangeAddress: opWBTCxopDAI,
+		input: opBTCx,
+		output: optimismDAIx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+
+	{
+		exchangeAddress: opUSDCxwstETH,
+		input: optimismUSDCx,
+		output: wstETHx,
+		subsidy: optimismRICAddress,
+		subsidyIndex: 1,
+		inputIndex: 0, // just a placeholder, not used
+		outputIndex: 0,
+	},
+
 ];
 
 const markets: InvestmentFlow[] = [
@@ -807,7 +868,7 @@ export const optimismMarkets: InvestmentFlow[] = [
 		tokenA: optimismUSDCx,
 		tokenB: optimismETHx,
 		coinA: Coin.USDC,
-		coinB: Coin.ETH,
+		coinB: Coin.OPETH,
 		flowKey: FlowEnum.opUSDCxopETH,
 		type: FlowTypes.market,
 	},
@@ -816,8 +877,56 @@ export const optimismMarkets: InvestmentFlow[] = [
 		tokenA: optimismDAIx,
 		tokenB: optimismETHx,
 		coinA: Coin.DAI,
-		coinB: Coin.ETH,
+		coinB: Coin.OPETH,
 		flowKey: FlowEnum.opDAIxopETH,
+		type: FlowTypes.market,
+	},
+
+	{
+		superToken: opUSDCxopWBTC,
+		tokenA: optimismUSDCx,
+		tokenB: opBTCx,
+		coinA: Coin.USDC,
+		coinB: Coin.BTC,
+		flowKey: FlowEnum.OPUSDCxOPBTC,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: opDAIxopWBTC,
+		tokenA: optimismDAIx,
+		tokenB: opBTCx,
+		coinA: Coin.DAI,
+		coinB: Coin.BTC,
+		flowKey: FlowEnum.OPDAIxOPBTC,
+		type: FlowTypes.market,
+	},
+
+	{
+		superToken: opWBTCxopUSDC,
+		tokenA: opBTCx,
+		tokenB: optimismUSDCx,
+		coinA: Coin.BTC,
+		coinB: Coin.USDC,
+		flowKey: FlowEnum.OPBTCxOPUSDC,
+		type: FlowTypes.market,
+	},
+	{
+		superToken: opWBTCxopDAI,
+		tokenA: opBTCx,
+		tokenB: optimismDAIx,
+		coinA: Coin.BTC,
+		coinB: Coin.DAI,
+		flowKey: FlowEnum.OPBTCxOPDAI,
+		type: FlowTypes.market,
+	},
+
+	{
+		superToken: opUSDCxwstETH,
+		tokenA: optimismUSDCx,
+		tokenB: wstETHx,
+		coinA: Coin.USDC,
+		coinB: Coin.WSTETH,
+		flowKey: FlowEnum.OPUSDCxWSTETH,
 		type: FlowTypes.market,
 	},
 ];

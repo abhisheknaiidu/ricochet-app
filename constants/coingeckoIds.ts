@@ -15,7 +15,7 @@ import {
 	fUSDCx,
 } from 'constants/mumbai_config';
 
-import { optimismUSDCx, optimismDAIx, OPx } from './optimism_config';
+import { optimismUSDCx, optimismDAIx, OPx, opBTCx, wstETHx, optimismETHx } from './optimism_config';
 
 export const coingeckoIds = new Map<string, string>([
 	[optimismUSDCx, 'usd-coin'],
@@ -34,4 +34,7 @@ export const coingeckoIds = new Map<string, string>([
 	[StIbAlluoUSDAddress, 'usd-coin'],
 	[StIbAlluoBTCAddress, 'wrapped-bitcoin'],
 	[OPx, 'optimism'],
+	[opBTCx, 'wrapped-bitcoin'],
+	[wstETHx, 'weth'],
+	[optimismETHx, 'weth']
 ]);
