@@ -6,15 +6,6 @@ import { getPoolFees, notAllowedMarkets } from '@richochet/utils/getPoolFees';
 import { ethers } from 'ethers';
 import { useNetwork } from 'wagmi';
 
-interface Props {
-	coinA: string;
-  coinB: string;
-  usdValue: string;
-  total: string;
-  streams: string;
-  feePercent: string;
-}
-
 export const MarketRow: FC<MarketData> = (data: any) => {
   const { chain } = useNetwork();
   const [feePercent, setFeePercent] = useState('');
