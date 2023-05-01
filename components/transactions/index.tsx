@@ -30,6 +30,7 @@ interface Props {
 const coins = [...namesCoin, ...namesCoinX];
 
 export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceList }) => {
+	
 	const { t } = useTranslation('home');
 	const { address } = useAccount();
 	const { chain } = useNetwork();
@@ -74,35 +75,44 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 	const [upgradeTokens, setUpgradeTokens] = useState<Coin[]>();
 	const [downgradeTokenList, setDowngradeTokenList] = useState<any[]>();
 	const [upgradeTokenList, setUpgradeTokenList] = useState<any[]>();
+	const [downgradeTokenPrices, setDowngradeTokenPrices] = useState<any[] | undefined>(['']); 
+	const [upgradeTokenPrices, setUpgradeTokenPrices] = useState<any[] | undefined>(['']); 
 
-	//to-do:refactor this
 	useEffect(() => {
 		if (!chain) return;
+		let downgradeTokenArr: Coin[] = []
+		let upgradeTokenArr: Coin[] = []
+		let downtokenPriceArr: any[] | undefined = []
+		let uptokenPriceArr: any[] | undefined = []
 		if (chain.id === 137) {
-			const downgradeTokenArr = downgradeTokensList.map((coin) => {return coin.coin})
-			const upgradeTokenArr = upgradeTokensList.map((coin) => {return coin.coin})
-			setDowngradeTokens(downgradeTokenArr);
-			setUpgradeTokens(upgradeTokenArr);
+			downgradeTokenArr = downgradeTokensList.map((coin) => {return coin.coin})
+			upgradeTokenArr = upgradeTokensList.map((coin) => {return coin.coin})
+			downtokenPriceArr = downgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
+			uptokenPriceArr = upgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
 			setUpgradeTokenList(upgradeTokensList);
 			setDowngradeTokenList(downgradeTokensList);
 		} 
 		if (chain.id === 80001) {
-			const downgradeTokenArr = mumbaiDowngradeList.map((coin) => {return coin.coin})
-			const upgradeTokenArr = mumbaiUpgradeTokensList.map((coin) => {return coin.coin})
-			setDowngradeTokens(downgradeTokenArr);
-			setUpgradeTokens(upgradeTokenArr);
+			downgradeTokenArr = mumbaiDowngradeList.map((coin) => {return coin.coin})
+			upgradeTokenArr = mumbaiUpgradeTokensList.map((coin) => {return coin.coin})
+			downtokenPriceArr = downgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
+			uptokenPriceArr = upgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
 			setUpgradeTokenList(mumbaiUpgradeTokensList);
 			setDowngradeTokenList(mumbaiDowngradeList);
 		}
 		if (chain.id === 10) {
-			const downgradeTokenArr = optimismDowngradeList.map((coin) => {return coin.coin})
-			const upgradeTokenArr = optimismUpgradeTokensList.map((coin) => {return coin.coin})
-			setDowngradeTokens(downgradeTokenArr);
-			setUpgradeTokens(upgradeTokenArr);
+			downgradeTokenArr = optimismDowngradeList.map((coin) => {return coin.coin})
+			upgradeTokenArr = optimismUpgradeTokensList.map((coin) => {return coin.coin})
+			downtokenPriceArr = downgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
+			uptokenPriceArr = upgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
 			setUpgradeTokenList(optimismUpgradeTokensList);
 			setDowngradeTokenList(optimismDowngradeList);
 		}
-	}, [chain])
+		setDowngradeTokens(downgradeTokenArr);
+		setUpgradeTokens(upgradeTokenArr);
+		setDowngradeTokenPrices(downtokenPriceArr)
+		setUpgradeTokenPrices(uptokenPriceArr)
+	}, [chain?.id, downgradeTokenList])
 
 	useEffect(() => {
 		if (type === BalanceAction.Withdraw && selectedToken !== Coin.SELECT) {
@@ -155,6 +165,7 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 			setAmount(walletBalance);
 		}
 	};
+
 	const handleSubmit = (event: any) => {
 		event?.preventDefault();
 		if (selectedToken !== Coin.SELECT) {
@@ -230,6 +241,7 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 								type === BalanceAction.Withdraw ? downgradeTokens : type === BalanceAction.Deposit ? upgradeTokens : []
 							}
 							handleChange={setSelectedToken}
+							balanceList={type === BalanceAction.Withdraw ? downgradeTokenPrices : upgradeTokenPrices}
 						/>
 						{selectedToken !== Coin.SELECT && (
 							<p>
@@ -251,11 +263,22 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 						</label>
 						<div className='flex items-center space-x-2 w-full'>
 							<span className='text-slate-100'>{t('from')}: </span>
-							<TokenList classNames='relative w-full z-30' value={swapFrom} coins={coins} handleChange={setSwapFrom} />
+							<TokenList
+								classNames='relative w-full z-30'
+								value={swapFrom} coins={coins}
+								handleChange={setSwapFrom}
+								balanceList={upgradeTokenPrices}
+							/>
 						</div>
 						<div className='flex items-center space-x-2 w-full'>
 							<span className='text-slate-100'>{t('to')}: </span>
-							<TokenList classNames='relative w-full z-20' value={swapTo} coins={coins} handleChange={setSwapTo} />
+							<TokenList
+								classNames='relative w-full z-20'
+								value={swapTo}
+								coins={coins}
+								handleChange={setSwapTo}
+								balanceList={upgradeTokenPrices}
+							/>
 						</div>
 					</>
 				)}

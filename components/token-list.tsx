@@ -11,9 +11,11 @@ interface Props {
 	value: Coin;
 	classNames?: string;
 	handleChange?: Dispatch<SetStateAction<Coin>>;
+	balanceList?: any;
 }
 
-const TokenList: NextPage<Props> = ({ classNames, value, coins, handleChange }): JSX.Element => (
+const TokenList: NextPage<Props> = ({ classNames, value, coins, balanceList, handleChange }): JSX.Element => (
+	
 	<Listbox value={value} onChange={handleChange}>
 		<div className={combineClasses(classNames ? classNames : 'relative w-full z-10')}>
 			<Listbox.Button className='relative w-full cursor-default rounded-lg bg-slate-700 py-2 pl-3 pr-10 text-left text-slate-200 shadow-md focus:outline-none focus-visible:border-slate-500 focus-visible:ring-2 focus-visible:ring-slate-100 focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-300 sm:text-sm'>
@@ -42,20 +44,30 @@ const TokenList: NextPage<Props> = ({ classNames, value, coins, handleChange }):
 							value={coin}>
 							{({ selected }) => (
 								<>
-									<div className='flex items-center whitespace-nowrap space-x-2'>
-										{coin !== Coin.SELECT && (
-											<span>
-												<Image width='22' height='22' src={iconsCoin[coin as Coin]!} alt={coin} />
-											</span>
-										)}
-										<span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>{coin}</span>
+									<div className='flex items-center justify-between whitespace-nowrap space-x-2'>
+										<div className='flex items-center'>
+											{coin !== Coin.SELECT && (
+												<span>
+													<Image width='22' height='22' src={iconsCoin[coin as Coin]!} alt={coin} />
+												</span>
+											)}
+											<span className={`block truncate ${selected ? 'font-medium' : 'font-normal'} ml-3`}>{coin}</span>
+										</div>
+		
+										<div>
+											{balanceList && (
+												<span>
+													{`${balanceList[index]}`|| '0'} 
+												</span>
+											)}
+										</div>
 									</div>
 									{selected ? (
 										<span className='absolute inset-y-0 left-0 flex items-center pl-3 text-green-600'>
 											<CheckIcon className='h-5 w-5' aria-hidden='true' />
 										</span>
 									) : null}
-
+								
 									{selected ? (
 										<span className='absolute inset-y-0 left-0 flex items-center pl-3 text-green-600'>
 											<CheckIcon className='h-5 w-5' aria-hidden='true' />

@@ -34,6 +34,7 @@ export const NewPosition: NextPage<Props> = ({ close, setClose }) => {
 	const [coinsTo, SetCoinsTo] = useState<Coin[]>(
 		configs.map((flow) => flow.coinB).filter((coin, index, self) => self.indexOf(coin) === index)
 	);
+
 	const [position, setPosition] = useState<InvestmentFlow>();
 	const [coingeckoPairs, setCoingeckoPairs] = useState<Map<string, Coin[]>>(new Map());
 	const [from, setFrom] = useState<Coin>(Coin.SELECT);
