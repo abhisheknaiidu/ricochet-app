@@ -19,9 +19,9 @@ export enum Color {
 	StIbAlluoBTC = '#F7931A',
 	IbAlluoBTC = '#F7931A',
 
-	OpRIC = '#7B7EFF',
-	RIC = '#7B7EFF',
-	MumbaiRIC = '#7B7EFF',
+	OpRIC = '#82A8CD',
+	RIC = '#82A8CD',
+	MumbaiRIC = '#82A8CD',
 	
 	USDC = '#2775CA',
 	OPUSDC = '#2775CA',
