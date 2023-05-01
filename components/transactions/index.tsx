@@ -77,34 +77,34 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 	const [upgradeTokenList, setUpgradeTokenList] = useState<any[]>();
 	const [downgradeTokenPrices, setDowngradeTokenPrices] = useState<any[] | undefined>(['']); 
 	const [upgradeTokenPrices, setUpgradeTokenPrices] = useState<any[] | undefined>(['']); 
-	//to-do:refactor this
+
 	useEffect(() => {
 		if (!chain) return;
 		let downgradeTokenArr: Coin[] = []
 		let upgradeTokenArr: Coin[] = []
-		let downtokenPriceArr: string[] | undefined = []
-		let uptokenPriceArr: string[] | undefined = []
+		let downtokenPriceArr: any[] | undefined = []
+		let uptokenPriceArr: any[] | undefined = []
 		if (chain.id === 137) {
 			downgradeTokenArr = downgradeTokensList.map((coin) => {return coin.coin})
 			upgradeTokenArr = upgradeTokensList.map((coin) => {return coin.coin})
-			downtokenPriceArr = downgradeTokenList?.map((coin) => balanceList[coin.tokenAddress])
-			uptokenPriceArr = upgradeTokenList?.map((coin) => balanceList[coin.tokenAddress])
+			downtokenPriceArr = downgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
+			uptokenPriceArr = upgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
 			setUpgradeTokenList(upgradeTokensList);
 			setDowngradeTokenList(downgradeTokensList);
 		} 
 		if (chain.id === 80001) {
 			downgradeTokenArr = mumbaiDowngradeList.map((coin) => {return coin.coin})
 			upgradeTokenArr = mumbaiUpgradeTokensList.map((coin) => {return coin.coin})
-			downtokenPriceArr = downgradeTokenList?.map((coin) => balanceList[coin.tokenAddress])
-			uptokenPriceArr = upgradeTokenList?.map((coin) => balanceList[coin.tokenAddress])
+			downtokenPriceArr = downgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
+			uptokenPriceArr = upgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
 			setUpgradeTokenList(mumbaiUpgradeTokensList);
 			setDowngradeTokenList(mumbaiDowngradeList);
 		}
 		if (chain.id === 10) {
 			downgradeTokenArr = optimismDowngradeList.map((coin) => {return coin.coin})
 			upgradeTokenArr = optimismUpgradeTokensList.map((coin) => {return coin.coin})
-			downtokenPriceArr = downgradeTokenList?.map((coin) => balanceList[coin.tokenAddress])
-			uptokenPriceArr = upgradeTokenList?.map((coin) => balanceList[coin.tokenAddress])
+			downtokenPriceArr = downgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
+			uptokenPriceArr = upgradeTokenList?.map((coin) => Number(balanceList[coin.tokenAddress]).toFixed(2))
 			setUpgradeTokenList(optimismUpgradeTokensList);
 			setDowngradeTokenList(optimismDowngradeList);
 		}
@@ -165,6 +165,7 @@ export const Transactions: NextPage<Props> = ({ type, close, setClose, balanceLi
 			setAmount(walletBalance);
 		}
 	};
+
 	const handleSubmit = (event: any) => {
 		event?.preventDefault();
 		if (selectedToken !== Coin.SELECT) {

@@ -11,7 +11,7 @@ interface Props {
 	value: Coin;
 	classNames?: string;
 	handleChange?: Dispatch<SetStateAction<Coin>>;
-	balanceList: any;
+	balanceList?: any;
 }
 
 const TokenList: NextPage<Props> = ({ classNames, value, coins, balanceList, handleChange }): JSX.Element => (
@@ -44,22 +44,30 @@ const TokenList: NextPage<Props> = ({ classNames, value, coins, balanceList, han
 							value={coin}>
 							{({ selected }) => (
 								<>
-									<div className='flex items-center whitespace-nowrap space-x-2'>
-										{coin !== Coin.SELECT && (
-											<span>
-												<Image width='22' height='22' src={iconsCoin[coin as Coin]!} alt={coin} />
-											</span>
-										)}
-										<span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>{coin}</span>
+									<div className='flex items-center justify-between whitespace-nowrap space-x-2'>
+										<div className='flex items-center'>
+											{coin !== Coin.SELECT && (
+												<span>
+													<Image width='22' height='22' src={iconsCoin[coin as Coin]!} alt={coin} />
+												</span>
+											)}
+											<span className={`block truncate ${selected ? 'font-medium' : 'font-normal'} ml-3`}>{coin}</span>
+										</div>
+		
+										<div>
+											{balanceList && (
+												<span>
+													{`${balanceList[index]}`|| '0'} 
+												</span>
+											)}
+										</div>
 									</div>
 									{selected ? (
 										<span className='absolute inset-y-0 left-0 flex items-center pl-3 text-green-600'>
 											<CheckIcon className='h-5 w-5' aria-hidden='true' />
 										</span>
 									) : null}
-										<span>
-											{`${balanceList[index]} ${coin}`|| '0'} 
-										</span>
+								
 									{selected ? (
 										<span className='absolute inset-y-0 left-0 flex items-center pl-3 text-green-600'>
 											<CheckIcon className='h-5 w-5' aria-hidden='true' />
