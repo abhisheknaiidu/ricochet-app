@@ -48,7 +48,7 @@ export const DoughnutChart: NextPage<Props> = ({ tokens, geckoPriceList, balance
 				data.push({
 					name: token.token,
 					color: token.color,
-					value: parseFloat(token.ricAmount),
+					value: parseFloat(token.ricUsdAmount),
 				});
 			});
 		setChartData(data);
@@ -56,7 +56,7 @@ export const DoughnutChart: NextPage<Props> = ({ tokens, geckoPriceList, balance
 
 	useEffect(() => {
 		const total = tokenList.reduce((total: any, token: any) => {
-			const balancess =
+			const balanceList =
 				Object.keys(balances).length &&
 				Object.keys(geckoPriceList).length &&
 				Object.keys(geckoMapping).length &&
@@ -65,10 +65,10 @@ export const DoughnutChart: NextPage<Props> = ({ tokens, geckoPriceList, balance
 					parseFloat((geckoPriceList as any)[(geckoMapping as any)[token.coin]].usd)
 				).toFixed(6);
 
-			return total + parseFloat(balancess as any);
+			return total + parseFloat(balanceList as any);
 		}, 0);
 		setTotal(total);
-	}, [tokens, balances, geckoPriceList, geckoMapping]);
+	}, [tokens]);
 
 	return (
 		<div className='h-52 w-52'>
@@ -90,8 +90,8 @@ export const DoughnutChart: NextPage<Props> = ({ tokens, geckoPriceList, balance
 						paddingAngle={0}
 						nameKey='name'
 						dataKey='value'>
-						{chartData.map((entry) => (
-							<Cell key={`cell-${entry.name}`} fill={entry.color} />
+						{chartData.map((entry, i) => (
+							<Cell key={`cell-${i}`} fill={entry.color} />
 						))}
 					</Pie>
 				</PieChart>

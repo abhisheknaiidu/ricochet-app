@@ -2,6 +2,7 @@ import { ArrowLongRightIcon } from '@heroicons/react/24/solid';
 import { combineClasses } from '@richochet/utils/helperFunctions';
 import { Coin, iconsCoin } from 'constants/coins';
 import { NextPage } from 'next';
+import { colors } from 'enumerations/colors.enum';
 import Image from 'next/image';
 
 export enum DataType {
@@ -49,22 +50,8 @@ export const CoinChange: NextPage<Props> = ({ coinA, coinB, token, type }): JSX.
 				<Image width='24' height='24' src={iconsCoin[token as Coin]!} alt={token} />
 				{/*refactor this garbage*/}
 				<span
-					className={combineClasses(
-						token === Coin.ETH
-							? 'bg-eth text-slate-800 px-1 py-0'
-							: token === Coin.WBTC
-							? 'bg-btc text-slate-800 px-1 py-0'
-							: token === Coin.RIC
-							? 'bg-ric text-slate-200 px-1 py-0'
-							: token === Coin.USDC
-							? 'bg-usdc text-slate-200 px-1 py-0'
-							: token === Coin.StIbAlluoETH
-							? 'bg-stIbAlluoEth text-slate-800 px-1 py-0'
-							: token === Coin.StIbAlluoUSD
-							? 'bg-stIbAlluoUsd text-slate-800 px-1 py-0'
-							: 'bg-transparent',
-						'text-sm'
-					)}>
+					style={{backgroundColor: `${colors[token]}`}}
+					className={'p-1 text-card-800 font-semibold text-xs'}>
 					{token}
 				</span>
 			</>

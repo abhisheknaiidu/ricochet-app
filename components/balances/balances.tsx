@@ -58,6 +58,7 @@ export const Balances: NextPage<Props> = ({ tokens, balances }): JSX.Element => 
 			if (tokens) setGeckoPriceList(tokens);
 			(async () => {
 				if (Object.keys(geckoPriceList).length && Object.keys(balances).length) {
+					console.log(colors, sortedUpgradeTokensList, 'test');
 					await Promise.all(
 						sortedUpgradeTokensList.map(async (token: any) => {
 							if (!address) return;
